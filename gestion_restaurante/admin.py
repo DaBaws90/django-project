@@ -1,21 +1,26 @@
 from django.contrib import admin
 from .models import Restaurant, Order, Place, Product
 from django import forms
+from .forms import OrderForm, PlaceForm, ProductForm, RestaurantForm
 
 # Register your models here.
 
-class PlaceInline(admin.TabularInline):
-    model = Place
-    extra = 1
-
-# class RestaurantAdminForm(forms.ModelForm):
-#     pass
-
 class RestaurantAdmin(admin.ModelAdmin):
+    pass
     # form = RestaurantAdminForm
-    inlines = [PlaceInline,]
+    # inlines = [PlaceInline,]
 
-admin.site.register(Order)
+class PlaceAdmin(admin.ModelAdmin):
+    pass
+
+class ProductAdmin(admin.ModelAdmin):
+    pass
+
+class OrderAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(Order, OrderAdmin)
 admin.site.register(Restaurant, RestaurantAdmin)
-admin.site.register(Place)
-admin.site.register(Product)
+admin.site.register(Place, PlaceAdmin)
+admin.site.register(Product, ProductAdmin)
+admin.site.empty_value_display = '(None)'

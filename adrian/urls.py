@@ -22,4 +22,5 @@ urlpatterns = [
     path('restaurante/', include('gestion_restaurante.urls')),
     path('cliente/', include('gestion_clientes.urls')),
     path('', RedirectView.as_view(url = 'cliente/')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
