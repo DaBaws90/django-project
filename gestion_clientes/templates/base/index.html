@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+
+{% block title %} Cientes {% endblock title %}
+
+{% load static %}
+{% block css %} 
+<link rel="stylesheet" type="text/css" href="{% static 'clientes/css/clientes.css' %}">
+{% endblock css %}
+
+{% block navbar %}
+{% endblock navbar %}
+
+{% block content %}
+<div class="container mt-5 flex-container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="text-center">
+                {% comment %} <h1 class="text-muted">Welcome to the clients management system!<h1> {% endcomment %}
+                <h1>Welcome to the clients management system!<h1>
+                <small class="text-muted">
+                    Here you can manage registries. Let's get started!
+                </small>
+                <div class="listLinks mt-3">
+                    <a href="{% url 'home' %}">Home</a>
+                    <a href="{% url 'customersIndex' %}">Clientes</a>
+                    <a href="{% url 'reviewsIndex' %}">Opiniones</a>
+                    <a href="">Nosotros</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
