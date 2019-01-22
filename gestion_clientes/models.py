@@ -1,9 +1,12 @@
 from django.db import models
 from django.utils.timezone import now
+from django.utils.text import slugify
 import datetime
+from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+# from gestion_restaurante.models import Order
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 
@@ -27,12 +30,8 @@ class Customer(models.Model):
     image = models.ImageField(null = True, blank = True, verbose_name= "Foto", upload_to = "gestion_clientes/static/clientes/images/")
     registered = models.DateTimeField(auto_now_add = True, verbose_name= "Fecha de registro")
     updated = models.DateTimeField(auto_now= True, verbose_name = "Fecha de edición")
-    # slug = models.SlugField()
-    
-    # @receiver(post_save, sender=User)
-    # def create_user_customer(sender, instance, created, **kwargs):
-    #     if created:
-    #         Customer.objects.create(user = instance)
+    products = models.ManyToManyField("gestion_restaurante.Product", through = "gestion_restaurante.Order")
+    slug = models.SlugField()
 
     @property
     def edad(self):
@@ -55,7 +54,29 @@ class Customer(models.Model):
     class Meta:
         verbose_name = "Cliente"
         verbose_name_plural = "Clientes"
-        ordering = ("name", "birthday", "registered", "updated")
+        ordering = ("name", "birthday", "registered", "updated", 'gender')
+
+    # def save(self, *args, **kwargs):
+    #     self.slug = slugify(self.fullname)
+    #     super(Customer, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('customer', kwargs={'slug': self.slug, 'id': self.id})
+
+@receiver(post_save, sender=User)
+def create_user_customer(sender, instance, created, **kwargs):
+    # print("instance: " + str(instance) + ", created: " + str(created) + ", kwargs: " + str(kwargs))
+    if created:
+        Customer.objects.create(user = instance)
+
+@receiver(post_save, sender=User)
+def update_user_customer(sender, instance, **kwargs):
+    instance.customer.save()
+
+@receiver(pre_save, sender = Customer)
+def pre_save_slug(sender, **kwargs):
+    slug = slugify(kwargs['instance'].fullname)
+    kwargs['instance'].slug = slug
 
 
 class Review(models.Model):

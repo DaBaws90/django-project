@@ -1,6 +1,10 @@
 from django import forms
 from django.core.validators import MinValueValidator, MaxValueValidator, EmailValidator
 from .models import Customer, Review
+from gestion_restaurante.models import Product
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import admin
 
 
 class CustomerForm(forms.ModelForm):
@@ -8,6 +12,8 @@ class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = '__all__'
+
+    # products = forms.MultipleChoiceField(choices=Product.objects.all())
 
     def clean_name(self):
         if len(self.cleaned_data['name']) < 3 or len(self.cleaned_data['name']) > 30:
@@ -33,9 +39,21 @@ class CustomerForm(forms.ModelForm):
         else:
             return self.cleaned_data['address'].capitalize()
     
-    # def clean_slug(self):
-    #     if self.cleaned_data['slug'] == "":
-    #         return self.cleaned_data['name'] + '-' + self.cleaned_data['middlename'] + '-' + self.cleaned_data['lastname']
+
+# class UserForm(forms.ModelForm): # Podríamos usar UserCrationForm
+    
+#     class Meta:
+#         model = User
+#         fields = ('username',)
+#         error_messages = {
+#             'username': {
+#                 'unique': ('El nombre de usuario debe ser único'),
+#                 'max_length': ('Demasiado largo. Máximo de carácteres: 150'),
+#             },
+#         }
+#         help_text = {
+#             'username': ('Obligatorio. 150 carácteres o menos. Letras, números y @/./+/-/_ permitidos.'),
+#         }
 
 
 class ReviewForm(forms.ModelForm):
@@ -43,6 +61,18 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = '__all__'
+        widgets = {
+            'title': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+        }
+        help_texts = {
+            'title': ('Título de su opinión'),
+        }
+        error_messages = {
+            'title': {
+                'max_length': ("Ha excedido la longitud máxima para este campo"),
+            },
+        }
+        localized_fields = '__all__'
 
     title = forms.CharField(max_length = 30, required = True, label = "Título", widget = forms.TextInput(
         attrs = {'class':'form-group'}

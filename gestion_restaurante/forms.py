@@ -1,5 +1,7 @@
 from django import forms
 from django.core.validators import EmailValidator
+from gestion_clientes.models import Customer
+from .models import Product, Order, Place, Restaurant
 
 class ContactUs(forms.Form):
     sender = forms.EmailField(label = "Email", validators=[EmailValidator], required = True, widget = forms.EmailInput(
@@ -36,4 +38,24 @@ class PlaceForm(forms.ModelForm):
     pass
 
 class OrderForm(forms.ModelForm):
-    pass
+
+    class Meta:
+        model = Order
+        fields = '__all__'
+
+    comment = forms.CharField(label = "Comentario", required = False, widget = forms.Textarea(
+        attrs= {'class':'form-group', 'placeholder':'Escriba un comentario acerca del pedido...'}
+    ))
+
+    product = forms.ModelChoiceField(label = "Producto", queryset = Product.objects.all(), empty_label= "Seleccione un producto")
+
+    # Mirar cómo añadir cliente desde aquí
+    customer = forms.ModelChoiceField(label = "Cliente", queryset = Customer.objects.all(), empty_label= "Seleccione un cliente")
+
+    def clean_comment(self):
+        if len(self.cleaned_data['comment'] > 150):
+            raise forms.ValidationError("El campo no puede exceder los 150 carácteres de longitud")
+        else:
+            return self.cleaned_data['comment'].capitalize()
+
+

@@ -30,7 +30,8 @@ class Product(models.Model):
     description = models.TextField(max_length = 80, verbose_name = "Descripción")
     stock = models.IntegerField(verbose_name= "Unidades", blank=True, null=True)
     weigth = models.DecimalField(verbose_name="Peso", blank=True, null=True, validators=[DecimalValidator],max_digits = 7 , decimal_places = 2)
-    purchasers = models.ManyToManyField(Customer, through = "Order")
+    created = models.DateTimeField(auto_now_add= True, verbose_name= "Fabricado el")
+    updated = models.DateTimeField(auto_now= True, verbose_name= "Modificado el")
 
     def __str__(self):
         return "Producto: {}".format(self.name)
@@ -38,14 +39,14 @@ class Product(models.Model):
     class Meta:
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
-        ordering = ('name',)
+        ordering = ('name','stock','weigth', 'created', 'updated')
 
 
 
 class Order(models.Model):
     # order_ref = models.AutoField(verbose_name= "ID Referencia", editable=False)
-    products = models.ForeignKey(Product, verbose_name = "Productos", on_delete = models.CASCADE, related_name= "productOrders")
-    customer = models.ForeignKey(Customer, verbose_name = "Cliente", on_delete = models.CASCADE, related_name= "customerOrders")
+    product = models.ForeignKey(Product, verbose_name = "Productos", on_delete = models.CASCADE, related_name= "productOrder")
+    customer = models.ForeignKey(Customer, verbose_name = "Cliente", on_delete = models.CASCADE, related_name= "customerOrder")
     date = models.DateTimeField(auto_now_add = True, verbose_name= "Fecha")
     comment = models.CharField(max_length = 150, verbose_name = "Comentario")
 
@@ -54,7 +55,7 @@ class Order(models.Model):
         return int(round(time.time() * 1000))
 
     def __str__(self):
-        return "Pedido # {}".format(self.order_ref)
+        return "Pedido # {}, at {}".format(self.order_ref, self.date)
 
     class Meta:
         verbose_name = "Pedido"
@@ -66,6 +67,8 @@ class Order(models.Model):
 class Restaurant(models.Model):
     name = models.CharField(max_length = 35, verbose_name = "Nombre")
     place = models.OneToOneField(Place, on_delete = models.CASCADE, verbose_name = "Ubicación", primary_key = True)
+    built = models.DateTimeField(auto_now_add= True, verbose_name= "Contruido el ")
+    capacity = models.IntegerField(verbose_name= "Aforo", blank= True, null= True)
 
     def __str__(self):
         return "{} - {}".format(self.name, self.place)
@@ -73,4 +76,4 @@ class Restaurant(models.Model):
     class Meta:
         verbose_name = "Restaurante"
         verbose_name_plural = "Restaurantes"
-        ordering = ('name',)
+        ordering = ('name', 'built', 'capacity')
