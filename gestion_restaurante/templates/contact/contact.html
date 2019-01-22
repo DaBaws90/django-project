@@ -1,0 +1,102 @@
+{% extends 'base/base.html' %}
+
+{% block title %} Contact Us {% endblock title %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'contact/css/contact.css' %}">
+{% endblock css %}
+
+{% block content %} 
+<div class="container centerContact mt-3">
+    <div class="col-md-8 offset-md-2">
+        <div class="text-center">
+            <h3 class="mb-5 mt-5">Ponte en contacto con nosotros</h3>
+            {% if 'success' in request.GET %}
+                <div class="text-center alert alert-success alert-dismissible fade show mt-3 mb-3">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				    	<span aria-hidden="true">&times;</span>
+				  	</button>Se envió el email correctamente
+                </div>
+            {% endif %}
+            
+            <div class="mt-5 text-center">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {% comment %} {% for field in form %}
+                        <div class="fieldWrapper">
+                            {{ field.errors }}
+                            {{ field.label_tag }} {{ field }}
+                            {% if field.help_text %}
+                                <p class="help">{{ field.help_text|safe }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %} {% endcomment %}
+                    {% comment %} <div class="fieldWrapper">
+                        {{ form.subject.errors }}
+                        <label for="{{ form.subject.id_for_label }}">Email subject:</label>
+                        {{ form.subject }}
+                    </div>
+                    <div class="fieldWrapper">
+                        {{ form.message.errors }}
+                        <label for="{{ form.message.id_for_label }}">Your message:</label>
+                        {{ form.message }}
+                    </div>
+                    <div class="fieldWrapper">
+                        {{ form.sender.errors }}
+                        <label for="{{ form.sender.id_for_label }}">Your email address:</label>
+                        {{ form.sender }}
+                    </div> {% endcomment %}
+                    <div class="form-group row text-center">
+                        <label class="col-md-2 col-form-label" for="sender">Email</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" id="name" name="sender"/>
+                            {% for error in form.sender.errors %}
+                            <div class="alert alert-danger alert-dismissible fade show mt-1 text-center">
+                                {{ error }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="subject">Asunto</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" id="subject" name="subject"/>
+                            {% for error in form.subject.errors %}
+                            <div class="alert alert-danger alert-dismissible fade show mt-1 text-center">
+                                {{ error }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="message">Mensaje</label>
+                        <div class="col-md-10">
+                            <textarea class="form-control" rows=4 type="email" name="message"></textarea>
+                            {% for error in form.message.errors %}
+                            <div class="alert alert-danger alert-dismissible fade show mt-1 text-center">
+                                {{ error }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-info mt-3" value="Enviar">
+                        <a href="{% url 'home' %}" class="float-left mt-4"><i class="fas fa-chevron-left"></i> Volver</a>
+                    </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

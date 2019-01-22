@@ -3,7 +3,7 @@ from django.core.validators import EmailValidator
 from gestion_clientes.models import Customer
 from .models import Product, Order, Place, Restaurant
 
-class ContactUs(forms.Form):
+class ContactUsForm(forms.Form):
     sender = forms.EmailField(label = "Email", validators=[EmailValidator], required = True, widget = forms.EmailInput(
         attrs = {'class':'form-group', 'placeholder':'Introduzca su email'}
     ))
@@ -12,7 +12,7 @@ class ContactUs(forms.Form):
         attrs = {'class':'form-group', 'placeholder':'Introduzca el asunto'}
     ))
 
-    message = forms.CharField(label = "Asunto", required = True, widget = forms.Textarea(
+    message = forms.CharField(label = "Mensaje", required = True, widget = forms.Textarea(
         attrs = {'class':'form-group', 'placeholder':'Escriba su mensaje'}
     ))
 
@@ -23,13 +23,43 @@ class ContactUs(forms.Form):
             return self.cleaned_data['subject'].capitalize()
 
     def clean_message(self):
-        if not self.cleaned_data['message'] is None or len(self.cleaned_data['message']) > 1000:
+        if self.cleaned_data['message'] is None or len(self.cleaned_data['message']) > 1000:
             raise forms.ValidationError('El campo debe tener 3 carácteres como mínimo y 1000 como máximo')
         else:
             return self.cleaned_data['message'].capitalize()
 
 class RestaurantForm(forms.ModelForm):
-    pass
+    
+    class Meta:
+        model = Restaurant
+        fields = '__all__'
+        widgets = {
+            'name': forms.TextInput(
+                attrs= {'class': 'form-group', 'placeholder': 'Escriba a1uí el nombre'}
+            ),
+            'capacity': forms.Textarea(
+                attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': '¿Cuántas personas caben?'}
+            ),
+        }
+        help_texts = {
+            'name': ('Nombre del establecimiento'),
+            'place': ('Ubicación del local'),
+            'capacity': ('Aforo máximo de las instalaciones')
+        }
+        error_messages = {
+            'name': {
+                'max_length': ("Ha excedido la longitud máxima para este campo"),
+            },
+        }
+
+    place = forms.ModelChoiceField(label = "Ubicación", queryset = Place.objects.all(), empty_label= "Seleccione una ubicación")
+
+    def clean_name(self):
+        if len(self.cleaned_data['name']) > 35:
+            raise forms.ValidationError("El campo no puede tener más de 35 carácteres")
+        else:
+            return self.cleaned_data['name'].capitalize()
+
 
 class ProductForm(forms.ModelForm):
     pass
@@ -43,9 +73,19 @@ class OrderForm(forms.ModelForm):
         model = Order
         fields = '__all__'
 
-    comment = forms.CharField(label = "Comentario", required = False, widget = forms.Textarea(
-        attrs= {'class':'form-group', 'placeholder':'Escriba un comentario acerca del pedido...'}
-    ))
+        widgets = {
+            'comment': forms.Textarea(
+                attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': 'Escriba aquí su comentario'}
+            ),
+        }
+        help_texts = {
+            'comment': ('¿Algo que desee comentarnos acerca del pedido?'),
+        }
+        error_messages = {
+            'comment': {
+                'max_length': ("Parece que se ha extendido demasiado y ha rebasado la longitud máxima")
+            }
+        }
 
     product = forms.ModelChoiceField(label = "Producto", queryset = Product.objects.all(), empty_label= "Seleccione un producto")
 

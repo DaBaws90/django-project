@@ -13,7 +13,6 @@ class CustomerForm(forms.ModelForm):
         model = Customer
         fields = '__all__'
 
-    # products = forms.MultipleChoiceField(choices=Product.objects.all())
 
     def clean_name(self):
         if len(self.cleaned_data['name']) < 3 or len(self.cleaned_data['name']) > 30:
@@ -62,25 +61,35 @@ class ReviewForm(forms.ModelForm):
         model = Review
         fields = '__all__'
         widgets = {
-            'title': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+            'title': forms.TextInput(
+                attrs= {'class': 'form-group'}
+            ),
+            'content': forms.Textarea(
+                attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': '¿Qué le ha parecido la experiencia?'}
+            ),
         }
-        help_texts = {
+        help_texts = { 
             'title': ('Título de su opinión'),
+            'content': ('Escriba aquí su opinión'),
+            'valoration': ('Ayúdenos a seguir mejorando. Introduzca su valoración')
         }
-        error_messages = {
+        error_messages = { # No sobreescribe las validaciones ya que estas tienen prioridad (me refiero a los ValidationError)
             'title': {
                 'max_length': ("Ha excedido la longitud máxima para este campo"),
             },
+            'content': {
+                'max_length': ("Parece que se ha extendido demasiado y ha rebasado la longitud máxima")
+            }
         }
         localized_fields = '__all__'
 
-    title = forms.CharField(max_length = 30, required = True, label = "Título", widget = forms.TextInput(
-        attrs = {'class':'form-group'}
-    ))
-    content = forms.CharField(max_length = 400, required = True, label = "Contenido", widget = forms.Textarea(
-        attrs= {'class':'form-group', 'placeholder':'Escriba aquí su opinión...'}
-    ))
-    valoration = forms.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], label = "Valoración")
+    # title = forms.CharField(max_length = 30, required = True, label = "Título", widget = forms.TextInput(
+    #     attrs = {'class':'form-group'}
+    # ))
+    # content = forms.CharField(max_length = 400, required = True, label = "Contenido", widget = forms.Textarea(
+    #     attrs= {'class':'form-group', 'placeholder':'Escriba aquí su opinión...'}
+    # ))
+    valoration = forms.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], label = "Valoración", help_text = "Pónganos nota")
 
     author = forms.ModelChoiceField(label = "Escrito por", queryset = Customer.objects.all(), empty_label= "Seleccione un cliente")
 
