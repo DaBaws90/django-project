@@ -1,7 +1,7 @@
 import sys
 from django.db import models
 from gestion_clientes.models import Review, Customer
-from django.core.validators import DecimalValidator
+from django.core.validators import DecimalValidator, MinValueValidator
 import time
 
 # Create your models here.
@@ -47,7 +47,7 @@ class Order(models.Model):
     # order_ref = models.AutoField(verbose_name= "ID Referencia", editable=False)
     product = models.ForeignKey(Product, verbose_name = "Productos", on_delete = models.CASCADE, related_name= "productOrder")
     customer = models.ForeignKey(Customer, verbose_name = "Cliente", on_delete = models.CASCADE, related_name= "customerOrder")
-    date = models.DateTimeField(auto_now_add = True, verbose_name= "Fecha")
+    date = models.DateTimeField(verbose_name= "Fecha")
     comment = models.CharField(max_length = 150, verbose_name = "Comentario")
 
     @property
@@ -67,8 +67,8 @@ class Order(models.Model):
 class Restaurant(models.Model):
     name = models.CharField(max_length = 35, verbose_name = "Nombre")
     place = models.OneToOneField(Place, on_delete = models.CASCADE, verbose_name = "Ubicación", primary_key = True)
-    built = models.DateTimeField(auto_now_add= True, verbose_name= "Contruido el ")
-    capacity = models.IntegerField(verbose_name= "Aforo", blank= True, null= True)
+    built = models.DateField(verbose_name= "Contruido el ")
+    capacity = models.IntegerField(verbose_name= "Aforo", validators=[MinValueValidator(0)])
 
     def __str__(self):
         return "{} - {}".format(self.name, self.place)

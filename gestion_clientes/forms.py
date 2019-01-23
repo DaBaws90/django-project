@@ -6,9 +6,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import admin
 
-from django.contrib.auth.forms import (
-    AdminPasswordChangeForm, UserChangeForm, UserCreationForm,
-)
+# from django.contrib.auth.forms import (
+#     AdminPasswordChangeForm, UserChangeForm, UserCreationForm,
+# )
 
 
 class CustomerForm(forms.ModelForm):
@@ -17,8 +17,6 @@ class CustomerForm(forms.ModelForm):
         model = Customer
         # fields = '__all__'
         exclude = ['slug', 'products', 'user']
-
-    # products = forms.MultipleChoiceField(choices = (Product.objects.all()))
 
     def clean_name(self):
         if len(self.cleaned_data['name']) < 3 or len(self.cleaned_data['name']) > 30:
@@ -98,6 +96,7 @@ class ReviewForm(forms.ModelForm):
     valoration = forms.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], label = "Valoración", help_text = "Pónganos nota")
 
     author = forms.ModelChoiceField(label = "Escrito por", queryset = Customer.objects.all(), empty_label= "Seleccione un cliente")
+    # OBtener el author a través de la instance actual
 
     def clean_title(self):
         if len(self.cleaned_data['title']) < 3 or len(self.cleaned_data['title']) > 30:

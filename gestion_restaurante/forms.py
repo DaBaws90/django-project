@@ -35,16 +35,20 @@ class RestaurantForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'name': forms.TextInput(
-                attrs= {'class': 'form-group', 'placeholder': 'Escriba a1uí el nombre'}
+                attrs= {'class': 'form-group', 'placeholder': 'Escriba aquí el nombre', 'required':True}
             ),
             'capacity': forms.Textarea(
-                attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': '¿Cuántas personas caben?'}
+                attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': '¿Cuántas personas caben?', 'required':True}
             ),
+            'built': forms.DateInput(
+                attrs={'class': 'form-group', 'placeholder': 'Fecha de la que data el establecimiento', 'required':True}
+            )
         }
         help_texts = {
             'name': ('Nombre del establecimiento'),
             'place': ('Ubicación del local'),
-            'capacity': ('Aforo máximo de las instalaciones')
+            'capacity': ('Aforo máximo de las instalaciones'),
+            'built': ('Indique la fecha de construcción del local'),
         }
         error_messages = {
             'name': {
@@ -68,17 +72,17 @@ class ProductForm(forms.ModelForm):
         fields = '__all__'
 
         widgets = {
-            'comment': forms.Textarea(
-                attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': 'Escriba aquí su comentario'}
-            ),
+            # 'comment': forms.Textarea(
+            #     attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': 'Escriba aquí su comentario'}
+            # ),
         }
         help_texts = {
-            'comment': ('¿Algo que desee comentarnos acerca del pedido?'),
+            # 'comment': ('¿Algo que desee comentarnos acerca del pedido?'),
         }
         error_messages = {
-            'comment': {
-                'max_length': ("Parece que se ha extendido demasiado y ha rebasado la longitud máxima")
-            }
+            # 'comment': {
+            #     'max_length': ("Parece que se ha extendido demasiado y ha rebasado la longitud máxima")
+            # }
         }
 
 class PlaceForm(forms.ModelForm):
@@ -88,17 +92,17 @@ class PlaceForm(forms.ModelForm):
         fields = '__all__'
 
         widgets = {
-            'comment': forms.Textarea(
-                attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': 'Escriba aquí su comentario'}
-            ),
+            # 'comment': forms.Textarea(
+            #     attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': 'Escriba aquí su comentario'}
+            # ),
         }
         help_texts = {
-            'comment': ('¿Algo que desee comentarnos acerca del pedido?'),
+            # 'comment': ('¿Algo que desee comentarnos acerca del pedido?'),
         }
         error_messages = {
-            'comment': {
-                'max_length': ("Parece que se ha extendido demasiado y ha rebasado la longitud máxima")
-            }
+            # 'comment': {
+            #     'max_length': ("Parece que se ha extendido demasiado y ha rebasado la longitud máxima")
+            # }
         }
 
 class OrderForm(forms.ModelForm):
@@ -109,11 +113,16 @@ class OrderForm(forms.ModelForm):
 
         widgets = {
             'comment': forms.Textarea(
-                attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': 'Escriba aquí su comentario'}
+                attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': 'Escriba aquí su comentario', 'required':True}
             ),
+            'date': forms.DateTimeInput(
+                attrs={'class': 'from-group', 'placeholder': '¿Cuándo se realizó el pedido?', 'required':True}
+            )
         }
         help_texts = {
             'comment': ('¿Algo que desee comentarnos acerca del pedido?'),
+            'date': ('Introduzca la fecha de realización del pedido'),
+            'product': ('Indique el producto que contiene el pedido'),
         }
         error_messages = {
             'comment': {
