@@ -6,13 +6,19 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import admin
 
+from django.contrib.auth.forms import (
+    AdminPasswordChangeForm, UserChangeForm, UserCreationForm,
+)
+
 
 class CustomerForm(forms.ModelForm):
 
     class Meta:
         model = Customer
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ['slug', 'products', 'user']
 
+    # products = forms.MultipleChoiceField(choices = (Product.objects.all()))
 
     def clean_name(self):
         if len(self.cleaned_data['name']) < 3 or len(self.cleaned_data['name']) > 30:
@@ -39,20 +45,20 @@ class CustomerForm(forms.ModelForm):
             return self.cleaned_data['address'].capitalize()
     
 
-# class UserForm(forms.ModelForm): # Podríamos usar UserCrationForm
+class UserForm(UserCreationForm): # Podríamos usar UserCreationForm
     
-#     class Meta:
-#         model = User
-#         fields = ('username',)
-#         error_messages = {
-#             'username': {
-#                 'unique': ('El nombre de usuario debe ser único'),
-#                 'max_length': ('Demasiado largo. Máximo de carácteres: 150'),
-#             },
-#         }
-#         help_text = {
-#             'username': ('Obligatorio. 150 carácteres o menos. Letras, números y @/./+/-/_ permitidos.'),
-#         }
+    class Meta:
+        model = User
+        fields = ('username', 'email')
+        error_messages = {
+            'username': {
+                'unique': ('El nombre de usuario debe ser único'),
+                'max_length': ('Demasiado largo. Máximo de carácteres: 150'),
+            },
+        }
+        help_text = {
+            'username': ('Obligatorio. 150 carácteres o menos. Letras, números y @/./+/-/_ permitidos.'),
+        }
 
 
 class ReviewForm(forms.ModelForm):

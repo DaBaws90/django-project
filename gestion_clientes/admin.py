@@ -12,6 +12,7 @@ from django.contrib.auth.forms import UserCreationForm
 class ReviewInline(admin.TabularInline):
     model = Review
     extra = 1
+    can_delete = False
 
 def reset_email_info(self, request, queryset):
     cont = queryset.update(email = None)
@@ -40,17 +41,17 @@ class CustomerAdmin(admin.ModelAdmin):
     list_per_page = 5
     ordering = ['name', 'middlename', 'lastname', 'birthday']
     search_fields = ['name', 'middlename', 'lastname', 'birthday']
-    list_filter = ['name', 'registered', 'updated', 'address', 'email', 'slug']
+    list_filter = ['name', 'registered', 'updated', 'address', 'slug']
     list_display_links = ['name', 'middlename', 'lastname']
-    list_editable = ['birthday' ,'email']
+    list_editable = ['birthday']
     inlines = [ReviewInline, OrderInline]
-    list_display = ['name', 'middlename', 'lastname', 'birthday', 'email']
+    list_display = ['name', 'middlename', 'lastname', 'birthday']
     fieldsets = [
         ('Cuenta de usuario', {'fields': ['user']}),
         ('Datos personales', {'fields': ['name', 'middlename', 'lastname', 'birthday', 'gender']}),
         ('Otros datos', {
             'classes': ('collapse',),
-            'fields': ['address', 'email', 'image', 'slug']}),
+            'fields': ['address', 'image', 'slug']}),
         # ('Productos adquiridos', {
         #     'fields': ['products']
         # }),

@@ -1,0 +1,87 @@
+{% extends 'base/base.html' %}
+
+{% block title %} Create Customer {% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="text-center">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% comment %} <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="name">Nombre</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" id="name" name="name">
+                            {% for error in form.name.errors %}
+                            <div class="alert alert-danger alert-dismissible fade show mt-1 text-center">
+                                {{ error }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="middlename">Primer apellido</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" id="middlename" name="middlename">
+                            {% for error in form.middlename.errors %}
+                            <div class="alert alert-danger alert-dismissible fade show mt-1 text-center">
+                                {{ error }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="lastname">Segundo apellido</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" id="lastname" name="lastname">
+                            {% for error in form.lastname.errors %}
+                            <div class="alert alert-danger alert-dismissible fade show mt-1 text-center">
+                                {{ error }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label" for="name">Nombre</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" id="name" name="name">
+                            {% for error in form.name.errors %}
+                            <div class="alert alert-danger alert-dismissible fade show mt-1 text-center">
+                                {{ error }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div> {% endcomment %}
+                    <table>
+                        {{user_form.as_p}}
+                        {{customer_form.as_p}}
+                    </table>
+
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-info mt-3" value="Enviar">
+                    </div>
+                
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

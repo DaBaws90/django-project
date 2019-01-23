@@ -34,20 +34,22 @@
                                 <small class="text-muted">Registrado el {{ customer.registered }} </small>
                             </li>
                         </ul>
-                        {% comment %} <div class="card-body">
-                        {% for review in customer.review_set.all %}
-                            {{ review.title }}   Desde el objeto customer                 
-                        {% endfor %}
-                        {% for review in reviews %}
-                            {{ review }}   Inyectado desde el controlador (views.py)
-                        {% endfor %}
-                        </div> {% endcomment %}
+                            <div class="card-header">
+                                <h5 class="mt-2">Reviews recientes</h5>
+                            </div>
+                            {% for r in customer.reviews.all %}
+                            <div class="card-body">
+                                {{ r }}
+                            </div>
+                            {% empty %}
+                            <div class="card-body">
+                                <p class="text-muted">No reviews found</p>
+                            </div>
+                            {% endfor %}
+
                         <div class="card-footer border-primary link">
                             <a href="{% url 'customersIndex' %}" class="btn btn-block btn-info"> Atrás</a>
                         </div>
-                        {% comment %} {% for r in customer.author_set.all %}
-                            <p>LUL</p>
-                        {% endfor %} {% endcomment %}
                     </div>
                     
                 {% else %}

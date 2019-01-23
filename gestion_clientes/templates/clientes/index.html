@@ -9,14 +9,14 @@
         <div class="col-md-8 offset-md-2">
             <div class="text-center">
                 <h2 class="mt-3 mb-5">Listed customers</h2>
-                {% if customers %}
-                    {% for c in customers %}
-                    <div class="card">
+                {% if object_list %}
+                    {% for c in object_list %}
+                    <div class="card mb-2 ">
                         <div class="card-header">
                             <h5 class="mt-2">{{ c.fullname }}</h5>
                         </div>
                         <div class="card-body">
-                            <a href="{% url 'customerDetails' c.id %}" class="btn btn-success"><i class="fas fa-search"></i> Ver detalles</a>
+                            <a href="{% url 'customerDetails' c.id c.slug %}" class="btn btn-success"><i class="fas fa-search"></i> Ver detalles</a>
                         </div>
                     </div>
                     {% endfor %}

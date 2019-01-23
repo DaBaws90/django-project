@@ -62,10 +62,44 @@ class RestaurantForm(forms.ModelForm):
 
 
 class ProductForm(forms.ModelForm):
-    pass
+    
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+        widgets = {
+            'comment': forms.Textarea(
+                attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': 'Escriba aquí su comentario'}
+            ),
+        }
+        help_texts = {
+            'comment': ('¿Algo que desee comentarnos acerca del pedido?'),
+        }
+        error_messages = {
+            'comment': {
+                'max_length': ("Parece que se ha extendido demasiado y ha rebasado la longitud máxima")
+            }
+        }
 
 class PlaceForm(forms.ModelForm):
-    pass
+    
+    class Meta:
+        model = Place
+        fields = '__all__'
+
+        widgets = {
+            'comment': forms.Textarea(
+                attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': 'Escriba aquí su comentario'}
+            ),
+        }
+        help_texts = {
+            'comment': ('¿Algo que desee comentarnos acerca del pedido?'),
+        }
+        error_messages = {
+            'comment': {
+                'max_length': ("Parece que se ha extendido demasiado y ha rebasado la longitud máxima")
+            }
+        }
 
 class OrderForm(forms.ModelForm):
 
