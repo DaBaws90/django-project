@@ -115,13 +115,13 @@ class OrderForm(forms.ModelForm):
             'comment': forms.Textarea(
                 attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': 'Escriba aquí su comentario', 'required':True}
             ),
-            'date': forms.DateTimeInput(
-                attrs={'class': 'from-group', 'placeholder': '¿Cuándo se realizó el pedido?', 'required':True}
-            )
+            # 'date': forms.DateTimeInput(
+            #     attrs={'class': 'from-group', 'placeholder': '¿Cuándo se realizó el pedido?', 'required':True}
+            # )
         }
         help_texts = {
             'comment': ('¿Algo que desee comentarnos acerca del pedido?'),
-            'date': ('Introduzca la fecha de realización del pedido'),
+            # 'date': ('Introduzca la fecha de realización del pedido'),
             'product': ('Indique el producto que contiene el pedido'),
         }
         error_messages = {

@@ -54,7 +54,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_max_show_all = 50
     list_per_page = 10
     inlines = [OrderInline,]
-    fields = ['name', ('stock', 'weight'), 'created', 'updated']
+    fields = ['name', ('stock', 'weigth')]
     search_fields = ['name', 'stock', 'weigth', 'created', 'updated']
     list_filter = ['name', 'stock', 'weigth', 'created', 'updated']
     list_display_links = ['name', 'stock', 'weigth']

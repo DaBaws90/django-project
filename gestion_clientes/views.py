@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404, redirec
 from gestion_clientes.models import Customer, Review
 from gestion_restaurante.forms import ContactUsForm
 from .forms import CustomerForm, UserForm
+from django.db import transaction
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.views.generic import TemplateView, ListView, DetailView, CreateView
@@ -34,25 +35,50 @@ class CustomerDetailsPage(DetailView):
     #     self.reviews = get_list_or_404(Review, author=self.kwargs['publisher'])
     #     return Book.objects.filter(publisher=self.publisher)
 
-class CustomerCreatePage(CreateView):
-    model = Customer
-    template_name = "clientes/create.html"
-    fields = '__all__'
+# class CustomerCreatePage(CreateView):
+#     model = Customer
+#     # customer_form = CustomerForm()
+#     # user_form = UserForm()
+#     form_class = CustomerForm, UserForm
+#     template_name = "clientes/create.html"
+#     # fields = '__all__'
 
+# def create_user(request):
+#     if request.method == 'POST':
+#         # customer_form = CustomerForm(request.POST, request.FILES)
+#         user_form = UserForm(request.POST, request.FILES)
+#         if user_form.is_valid():
+#             user = user_form.save()
+#             user.refresh_from_db()  # load the profile instance created by the signal
+#             user.customer.birthdate = user_form.cleaned_data.get('birth_date')
+#             user.save()
+#             # customer_form.save()
+#             # user_form.save()
+#             return redirect(reverse('home') + '?created')
+#         # else:
+#         #     messages.error(request, _('Please correct the error below.'))
+#     else:
+#         # customer_form = CustomerForm()
+#         user_form = UserForm()
+#     return render(request, 'clientes/create.html', {'user_form':user_form})
+
+@transaction.atomic
 def create_user(request):
     if request.method == 'POST':
-        customer_form = CustomerForm(request.POST, request.FILES)
         user_form = UserForm(request.POST)
-        if customer_form.is_valid() and user_form.is_valid():
-            customer_form.save()
-            user_form.save()
+        customer_form = CustomerForm(request.POST, request.FILES)
+        if user_form.is_valid() and customer_form.is_valid():
+            user = user_form.save()
+            user.refresh_from_db()  # This will load the Profile created by the Signal
+            customer_form = CustomerForm(request.POST, instance=user.customer)  # Reload the profile form with the profile instance
+            customer_form.full_clean()  # Manually clean the form this time. It is implicitly called by "is_valid()" method
+            customer_form.save()  # Gracefully save the form
             return redirect(reverse('home') + '?created')
-        # else:
-        #     messages.error(request, _('Please correct the error below.'))
     else:
-        customer_form = CustomerForm()
         user_form = UserForm()
-    return render(request, 'clientes/create.html', {'customer_form': customer_form, 'user_form':user_form})
+        customer_form = CustomerForm()
+    return render(request, 'clientes/create.html', {'user_form': user_form, 'customer_form': customer_form
+})
 
 def update_user(request):
 

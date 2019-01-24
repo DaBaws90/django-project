@@ -47,7 +47,7 @@ class Order(models.Model):
     # order_ref = models.AutoField(verbose_name= "ID Referencia", editable=False)
     product = models.ForeignKey(Product, verbose_name = "Productos", on_delete = models.CASCADE, related_name= "productOrder")
     customer = models.ForeignKey(Customer, verbose_name = "Cliente", on_delete = models.CASCADE, related_name= "customerOrder")
-    date = models.DateTimeField(verbose_name= "Fecha")
+    date = models.DateTimeField(auto_now_add=True, verbose_name= "Fecha")
     comment = models.CharField(max_length = 150, verbose_name = "Comentario")
 
     @property

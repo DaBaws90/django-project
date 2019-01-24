@@ -47,7 +47,7 @@ class CustomerAdmin(admin.ModelAdmin):
     inlines = [ReviewInline, OrderInline]
     list_display = ['name', 'middlename', 'lastname', 'birthday']
     fieldsets = [
-        ('Cuenta de usuario', {'fields': ['user']}),
+        # ('Cuenta de usuario', {'fields': ['user']}),
         ('Datos personales', {'fields': ['name', 'middlename', 'lastname', 'birthday', 'gender']}),
         ('Otros datos', {
             'classes': ('collapse',),
