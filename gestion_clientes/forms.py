@@ -6,6 +6,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import admin
 
+# "Sobreescribimos" el widget de tipo date porque por defecto renderiza el input de tipo text en el formulario 
+# (Es como trabaja Django, pero quería un datepicker en el formulario en lugar de un string formateado)
+class DateInput(forms.DateInput):
+    input_type = "date"
 
 class CustomerForm(forms.ModelForm):
 
@@ -13,6 +17,12 @@ class CustomerForm(forms.ModelForm):
         model = Customer
         # fields = '__all__'
         exclude = ['slug', 'products', 'user']
+
+        widgets = { # Usamos el widget personalizado con uno de los formatos permitidos
+            'birthday': DateInput(
+                format='%Y-%m-%d'
+            ),
+        }
 
     def clean_name(self):
         if len(self.cleaned_data['name']) < 3 or len(self.cleaned_data['name']) > 30:
@@ -60,6 +70,7 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = '__all__'
+        # exclude = ['author',]
         widgets = {
             'title': forms.TextInput(
                 attrs= {'class': 'form-group'}
@@ -83,16 +94,10 @@ class ReviewForm(forms.ModelForm):
         }
         localized_fields = '__all__'
 
-    # title = forms.CharField(max_length = 30, required = True, label = "Título", widget = forms.TextInput(
-    #     attrs = {'class':'form-group'}
-    # ))
-    # content = forms.CharField(max_length = 400, required = True, label = "Contenido", widget = forms.Textarea(
-    #     attrs= {'class':'form-group', 'placeholder':'Escriba aquí su opinión...'}
-    # ))
     valoration = forms.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], label = "Valoración", help_text = "Pónganos nota")
 
-    author = forms.ModelChoiceField(label = "Escrito por", queryset = Customer.objects.all(), empty_label= "Seleccione un cliente")
-    # OBtener el author a través de la instance actual
+    # author = forms.ModelChoiceField(label = "Escrito por", queryset = Customer.objects.all(), empty_label= "Seleccione un cliente")
+    # Obtener el author a través de la instance actual en lugar de seleccionarlo en desplegable (IMPLEMENTAR CON LOGIN O DA ERROR)
 
     def clean_title(self):
         if len(self.cleaned_data['title']) < 3 or len(self.cleaned_data['title']) > 30:
@@ -104,4 +109,4 @@ class ReviewForm(forms.ModelForm):
         if len(self.cleaned_data['content']) < 20 or len(self.cleaned_data['content']) > 400:
             raise forms.ValidationError('El campo debe tener 20 carácteres como mínimo y 400 como máximo')
         else:
-            return self.cleaned_data['content'].capitalize()
+            return self.cleaned_data['content'][:1].upper() + self.cleaned_data['content'][1:]

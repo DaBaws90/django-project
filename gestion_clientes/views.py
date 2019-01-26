@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from gestion_clientes.models import Customer, Review
 from gestion_restaurante.forms import ContactUsForm
-from .forms import CustomerForm, UserForm
+from .forms import CustomerForm, UserForm, ReviewForm
 from django.db import transaction
 from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserChangeForm
 
 # Create your views here.
 
@@ -25,16 +26,8 @@ class CustomerDetailsPage(DetailView):
 
 class CustomerDeletePage(DeleteView):
     model = User
+    context_object_name = "user"
     success_url = reverse_lazy('customersIndex')
-
-# class CustomerCreatePage(CreateView):
-#     model = Customer
-#     # customer_form = CustomerForm()
-#     # user_form = UserForm()
-#     form_class = CustomerForm, UserForm
-#     template_name = "clientes/create.html"
-#     # fields = '__all__'
-
 
 @transaction.atomic
 def create_user(request):
@@ -44,7 +37,7 @@ def create_user(request):
         if user_form.is_valid() and customer_form.is_valid():
             user = user_form.save()
             user.refresh_from_db()
-            customer_form = CustomerForm(request.POST, instance=user.customer)
+            customer_form = CustomerForm(request.POST, request.FILES, instance=user.customer)
             customer_form.full_clean()
             customer_form.save()
             return redirect(reverse('home') + '?created')
@@ -57,43 +50,75 @@ def create_user(request):
 })
 
 @transaction.atomic
-def update_user(request):
+def update_user2(request, pk):
+    user = User.objects.get(id = pk)
     if request.method == 'POST':
-        customer_form = CustomerForm(request.POST, request.FILES, instance= request.user.customer)
-        user_form = UserForm(request.POST, instance = request.user)
+        # Evaluamos si no ha cambiado el username
+        if request.POST['username'] == user.username:
+            # Hay que hacer esto porque el objeto request.POST es inmutable
+            post = request.POST.copy()
+            post['username'] = "DUMMY"
+            request.POST = post
+            # Asignamos el antiguo username a variable porque al validar el formulario, se guarda el objeto user 
+            # con el valor "DUMMY" y por tanto, necesitamos recuperarlo de alguna otra manera (con esta variable)
+            oldUsername = user.username
+
+        if request.POST['username'] == "DUMMY":
+            # Si el request['username] es igual a DUMMY, e que hubo error de validaión en el formulario del Customer.
+            # Reseteamos manualmente el campo o de lo contrario, el formulario reflejará DUMMY en el campo username
+            post = request.POST.copy()
+            post['username'] = user.username
+            request.POST = post
+
+        customer_form = CustomerForm(request.POST, request.FILES, instance=user.customer)
+        user_form = UserForm(request.POST, instance=user)
+
         if customer_form.is_valid() and user_form.is_valid():
-            customer_form.save()
+            if user_form.cleaned_data['username'] == "DUMMY":
+                # Si el valor del username del form es DUMMY, es que no lo habíamos cambiado en el form, por lo que 
+                # asignamos de nuevo el valor antiguo
+                user.username = oldUsername
+                # user_form.cleaned_data['username'] = oldUsername
+
+            # El objeto user lleva con él toda la información del customer, y lo guarda mediante el método que declaramos
+            # en el modelo customer (el que intercepta la señal 'signal' con el decorador @receiver(post_save)) 
             user_form.save()
             return redirect(reverse('home') + '?updated')
+            # Todo esto es necesario porque el form de UserCreationForm valida los usernames como únicos, por lo que
+            # el formulario nos dice que el username ya está en uso (Con esto, pasamos por encima de esa validación)
         # else:
         #     messages.error(request, _('Please correct the error below.'))
     else:
-        customer_form = CustomerForm(instance=request.user.customer)
-        user_form = UserForm(instance=request.user)
+        user_form = UserForm(instance=user)
+        customer_form = CustomerForm(instance=user.customer)
+        
     return render(request, 'clientes/update.html', {'customer_form': customer_form, 'user_form':user_form})
 
-# def listCustomers(request):
-#     customers = get_list_or_404(Customer.objects.order_by("name"))
-#     context = {'customers': customers}
-#     return render(request, "clientes/index.html", context)
+class ReviewsListPage(ListView):
+    model  = Review
+    template_name = "reviews/index.html"
+    queryset = Review.objects.all()
+    context_object_name = "reviews"
 
-# def customerDetails(request, customer_id):
-#     customer = get_object_or_404(Customer, id = customer_id)
-#     reviews = Review.objects.filter(author = customer) # Inyectamos la "relación" o lo recuperamos en el template 
-#         # desde el objeto customer (for X in customer.review_set.all)
-#     return render(request, "clientes/details.html", {'customer': customer, 'reviews': reviews}) # This is the context
+class ReviewDetailsPage(DetailView):
+    model = Review
+    template_name = "reviews/details.html"
+    context_object_name = "review"
 
-def listReviews(request):
-    reviews = get_list_or_404(Review.objects.order_by("valoration"))
-    context = {'reviews': reviews}
-    return render(request, "reviews/index.html", context)
+class ReviewsCreatePage(CreateView):
+    model = Review
+    template_name = "reviews/create.html"
+    form_class = ReviewForm
 
-def reviewDetails(request, review_id):
-    # En una sola línea de código, aunque es menos legible (a veces menos es más, y viceversa)
-    return render(request, "reviews/details.html", {'review': get_object_or_404(Review, id = review_id)})
+    def get_success_url(self):
+        return reverse('reviewsIndex')
+
+    # def form_valid(self, form):
+    #     obj = form.save(commit=False)
+    #     obj.author = self.request.user.customer
+    #     obj.save()
 
 def contactUs(request):
-
     if request.method == "POST":
         form = ContactUsForm(data = request.POST)
         if form.is_valid():

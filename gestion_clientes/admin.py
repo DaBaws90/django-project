@@ -14,6 +14,8 @@ class ReviewInline(admin.TabularInline):
     extra = 1
     can_delete = False
 
+# Creamos una opción para el menú desplegables del panel de adminstración, en el que está la opcón de eliminar los
+#  registros seleccionados
 def reset_email_info(self, request, queryset):
     cont = queryset.update(email = None)
     if cont == 1:
@@ -29,7 +31,6 @@ class CustomerInline(admin.StackedInline):
     verbose_name_plural = "Cliente"
 
 class UserAdmin(BaseUserAdmin):
-    # form = UserForm
     inlines = [CustomerInline,]
 
 class CustomerAdmin(admin.ModelAdmin):
@@ -47,14 +48,10 @@ class CustomerAdmin(admin.ModelAdmin):
     inlines = [ReviewInline, OrderInline]
     list_display = ['name', 'middlename', 'lastname', 'birthday']
     fieldsets = [
-        # ('Cuenta de usuario', {'fields': ['user']}),
         ('Datos personales', {'fields': ['name', 'middlename', 'lastname', 'birthday', 'gender']}),
         ('Otros datos', {
             'classes': ('collapse',),
             'fields': ['address', 'image', 'slug']}),
-        # ('Productos adquiridos', {
-        #     'fields': ['products']
-        # }),
     ]
     date_hierarchy = 'registered'
     empty_value_display = "No data assoc"

@@ -15,12 +15,15 @@
                         <div class="card-header">
                             <h5 class="mt-2">{{ c.fullname }}</h5>
                         </div>
-                        <div class="card-body">
-                            <a href="{% url 'customerDetails' c.id c.slug %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
-                            <a onclick="return confirm('¿Eliminar usuario?')" href="{% url 'customersDelete' c.user.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
-                            <a href="{% url 'customersDelete' c.user.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
-                            
-                        </div>
+                        {% comment %} {% if request.is_Authenticated %} {% endcomment %}
+                            <div class="card-body">
+                                <a href="{% url 'customerDetails' c.id c.slug %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
+                                {% comment %} {% if request.user.is_staff %} {% endcomment %}
+                                    <a onclick="return confirm('¿Eliminar usuario?')" href="{% url 'customersDelete' c.user.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
+                                    <a href="{% url 'customersUpdate' c.user.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
+                                {% comment %} {% endif %} {% endcomment %}
+                            </div>
+                        {% comment %} {% endif %} {% endcomment %}
                     </div>
                     {% endfor %}
                     

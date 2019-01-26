@@ -26,7 +26,7 @@
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
-                            <small class="text-muted">Nacido el {{ customer.birthday }} </small>
+                            <small class="text-muted">Nacido el {{ customer.birthday|default:"(No hay información)" }} </small>
                         </li>
                         <li class="list-group-item">
                             <small class="text-muted">Registrado el {{ customer.registered }} </small>
@@ -37,7 +37,7 @@
                     </div>
                     {% for r in customer.reviews.all %}
                         <div class="card-body">
-                            {{ r }}
+                            {{ r.title }}
                         </div>
                     {% empty %}
                         <div class="card-body">

@@ -10,7 +10,7 @@
             <div class="text-center">
                 <form action="" method="POST">
                     {% csrf_token %}
-                    <h3 class="alert alert-danger">¿Realmente desea eliminar el usuario {{ object }}?</h3>
+                    <h3 class="alert alert-danger">¿Realmente desea eliminar el usuario {{ user }}?</h3>
                     <input type="submit" class="btn btn-outline-danger btn-large" value="Confirmar">
                 </form>
             </div>

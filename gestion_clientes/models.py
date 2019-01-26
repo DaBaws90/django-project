@@ -23,15 +23,12 @@ class Customer(models.Model):
     name = models.CharField(max_length = 30, verbose_name = "Nombre")
     middlename = models.CharField(max_length = 40, verbose_name = "Primer apellido")
     lastname = models.CharField(max_length = 40, verbose_name = "Segundo apellido")
-    gender = models.CharField(max_length = 1, choices = GENDER_OPTS, default = MALE, verbose_name = "Género", null = True, blank = True)
+    gender = models.CharField(max_length = 1, choices = GENDER_OPTS, default = MALE, verbose_name = "Género", help_text = "Seleccione su sexo")
     birthday = models.DateField(verbose_name = "Fecha de nacimiento", null = True, blank = True)
     address = models.CharField(max_length = 80, verbose_name = "Dirección")
-    # Correco electrónico ya está preente en el modelo User de Django
-    # email = models.EmailField(max_length = 254, validators=[EmailValidator], verbose_name = "Correo electrónico")
     image = models.ImageField(null = True, blank = True, verbose_name= "Foto", upload_to = "images/")
     registered = models.DateTimeField(auto_now_add = True, verbose_name= "Fecha de registro")
     updated = models.DateTimeField(auto_now= True, verbose_name = "Fecha de edición")
-    # products = models.ManyToManyField("gestion_restaurante.Product", through = "gestion_restaurante.Order")
     slug = models.SlugField()
 
     @property
@@ -57,17 +54,12 @@ class Customer(models.Model):
         verbose_name_plural = "Clientes"
         ordering = ("name", "birthday", "registered", "updated", 'gender')
 
-    # def save(self, *args, **kwargs):
-    #     self.slug = slugify(self.fullname)
-    #     super(Customer, self).save(*args, **kwargs)
-
     def get_absolute_url(self):
         return reverse('customerDetails', kwargs={'id': self.id, 'slug': self.slug})
 
 @receiver(post_save, sender=User)
 def create_user_customer(sender, instance, created, **kwargs):
-    print("instance: " + str(instance) + ", created: " + str(created) + ", kwargs: " + str(kwargs))
-    # print("instance: " + str(instance) + ", sender: " + str(sender) + ", created: " + str(created) + ", kwargs: " + str(kwargs))
+    # print("instance: " + str(instance) + ", created: " + str(created) + ", kwargs: " + str(kwargs))
     if created:
         Customer.objects.create(user = instance)
 
