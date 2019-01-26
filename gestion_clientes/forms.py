@@ -36,7 +36,7 @@ class CustomerForm(forms.ModelForm):
         if len(self.cleaned_data['address']) < 5 or len(self.cleaned_data['address']) > 80:
             raise forms.ValidationError('El campo debe tener 5 carácteres como mínimo y 80 como máximo')
         else:
-            return self.cleaned_data['address'].capitalize()
+            return self.cleaned_data['address'][:1].upper() + self.cleaned_data['address'][1:]
     
 
 class UserForm(UserCreationForm): # Podríamos usar UserCreationForm

@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Delete User{% endblock title %}
+
+{% block content %}
+
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="text-center">
+                <form class="alert alert-danger" action="" method="POST">
+                    {% csrf_token %}
+                    <h3 class="alert alert-danger">¿Realmente desea eliminar el usuario {{ object }}?</h3>
+                    <input type="submit" class="btn btn-outline-danger btn-large" value="Confirmar">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

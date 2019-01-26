@@ -40,7 +40,7 @@ class OrderAdmin(admin.ModelAdmin):
     actions_on_top = False
     list_per_page = 5
     list_max_show_all = 50
-    fields = [(('product', 'customer'), 'date'), 'comment']
+    fields = [('product', 'customer'), 'comment']
     search_fields = ['product', 'customer', 'date', 'comment']
     list_filter = ['product', 'customer', 'date']
     list_display_links = ['product', 'customer', 'date']

@@ -13,58 +13,54 @@
         <div class="col-md-8 offset-md-2">
             <div class="text-center">
                 <h2 class="mt-3 mb-5">Customer's details</h2>
-                {% if customer %}
-                    <div class="card border-primary">
-                        <div class="card-header border-primary">
-                            <h5 class="mt-2">Nombre:  {{ customer.fullname }}</h5>
-                        </div>
+                <div class="card border-primary">
+                    <div class="card-header border-primary">
+                        <h5 class="mt-2">Nombre:  {{ customer.fullname }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-text">Dirección:  {{ customer.address }}</h6>
+                    </div>
+                    <div class="card-body">
+                        {% load static %}
+                        <img class="img-fluid rounded mx-auto d-block" src="{% static "clientes/images/fifa18.jpg" %}" alt="My image">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <small class="text-muted">Nacido el {{ customer.birthday }} </small>
+                        </li>
+                        <li class="list-group-item">
+                            <small class="text-muted">Registrado el {{ customer.registered }} </small>
+                        </li>
+                    </ul>
+                    <div class="card-header border-primary">
+                        <h5 class="mt-2">Reviews recientes</h5>
+                    </div>
+                    {% for r in customer.reviews.all %}
                         <div class="card-body">
-                            <h6 class="card-text">Dirección:  {{ customer.address }}</h6>
+                            {{ r }}
                         </div>
+                    {% empty %}
                         <div class="card-body">
-                            {% load static %}
-                            <img src="{% static "clientes/images/fifa18.jpg" %}" alt="My image">
+                            <p class="text-muted mt-2">No reviews found</p>
                         </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                            {% comment %} ({{ customer.edad }}) {% endcomment %}
-                                <small class="text-muted">Nacido el {{ customer.birthday }} </small>
-                            </li>
-                            <li class="list-group-item">
-                                <small class="text-muted">Registrado el {{ customer.registered }} </small>
-                            </li>
-                        </ul>
-                            <div class="card-header">
-                                <h5 class="mt-2">Reviews recientes</h5>
-                            </div>
-                            {% for r in customer.reviews.all %}
-                            <div class="card-body">
-                                {{ r }}
-                            </div>
-                            {% empty %}
-                            <div class="card-body">
-                                <p class="text-muted">No reviews found</p>
-                            </div>
-                            {% endfor %}
+                    {% endfor %}
+                    <div class="card-header border-primary">
+                        <h5 class="mt-2">Pedidos recientes</h5>
+                    </div>
+                    {% for o in customer.customerOrders.all %}
+                        <div class="card-body">
+                            <p>Pedido Nº: {{ o.order_ref }}</p>
+                        </div>
+                    {% empty %}
+                        <div class="card-body">
+                            <p class="text-muted mt-2">No orders found</p>
+                        </div>
+                    {% endfor %}
 
-                        <div class="card-footer border-primary link">
-                            <a href="{% url 'customersIndex' %}" class="btn btn-block btn-info"> Atrás</a>
-                        </div>
+                    <div class="card-footer p-0 link">
+                        <a href="{% url 'customersIndex' %}" class="btn btn-block btn-outline-info"> Atrás</a>
                     </div>
-                    
-                {% else %}
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="alert alert-danger">Lo sentimos!</h4>
-                        </div>
-                        <div class="card-body">
-                            Un error ha ocurrido y no hay datos que mostrar. ¿Existe el registro realmente?
-                        </div>
-                        <div class="card-footer border-primary link">
-                            <a href="{% url 'customersIndex' %}" class="btn btn-block btn-info"> Volver</a>
-                        </div>
-                    </div>
-                {% endif %}
+                </div>
             </div>
         </div>
     </div>

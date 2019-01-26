@@ -3,14 +3,13 @@ from gestion_clientes.models import Customer, Review
 from gestion_restaurante.forms import ContactUsForm
 from .forms import CustomerForm, UserForm
 from django.db import transaction
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
-from django.views.generic import TemplateView, ListView, DetailView, CreateView
-# from django.models import Page
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView
+from django.contrib.auth.models import User
 
 # Create your views here.
-# def index(request):
-#     return render(request, "base/index.html")
+
 class HomePage(TemplateView):
     template_name = "base/index.html"
 
@@ -24,16 +23,9 @@ class CustomerDetailsPage(DetailView):
     template_name = "clientes/details.html"
     context_object_name = "customer"
 
-    # def get_context_data(self, **kwargs):
-    #     # Call the base implementation first to get a context
-    #     context = super().get_context_data(**kwargs)
-    #     # Add in a QuerySet of all the books
-    #     context['reviews_list'] = Review.objects.filter(author = self)
-    #     return context
-
-    # def get_queryset(self):
-    #     self.reviews = get_list_or_404(Review, author=self.kwargs['publisher'])
-    #     return Book.objects.filter(publisher=self.publisher)
+class CustomerDeletePage(DeleteView):
+    model = User
+    success_url = reverse_lazy('customersIndex')
 
 # class CustomerCreatePage(CreateView):
 #     model = Customer
@@ -43,24 +35,6 @@ class CustomerDetailsPage(DetailView):
 #     template_name = "clientes/create.html"
 #     # fields = '__all__'
 
-# def create_user(request):
-#     if request.method == 'POST':
-#         # customer_form = CustomerForm(request.POST, request.FILES)
-#         user_form = UserForm(request.POST, request.FILES)
-#         if user_form.is_valid():
-#             user = user_form.save()
-#             user.refresh_from_db()  # load the profile instance created by the signal
-#             user.customer.birthdate = user_form.cleaned_data.get('birth_date')
-#             user.save()
-#             # customer_form.save()
-#             # user_form.save()
-#             return redirect(reverse('home') + '?created')
-#         # else:
-#         #     messages.error(request, _('Please correct the error below.'))
-#     else:
-#         # customer_form = CustomerForm()
-#         user_form = UserForm()
-#     return render(request, 'clientes/create.html', {'user_form':user_form})
 
 @transaction.atomic
 def create_user(request):
@@ -69,19 +43,21 @@ def create_user(request):
         customer_form = CustomerForm(request.POST, request.FILES)
         if user_form.is_valid() and customer_form.is_valid():
             user = user_form.save()
-            user.refresh_from_db()  # This will load the Profile created by the Signal
-            customer_form = CustomerForm(request.POST, instance=user.customer)  # Reload the profile form with the profile instance
-            customer_form.full_clean()  # Manually clean the form this time. It is implicitly called by "is_valid()" method
-            customer_form.save()  # Gracefully save the form
+            user.refresh_from_db()
+            customer_form = CustomerForm(request.POST, instance=user.customer)
+            customer_form.full_clean()
+            customer_form.save()
             return redirect(reverse('home') + '?created')
+        # else:
+        #     messages.error(request, _('Please correct the error below.'))
     else:
         user_form = UserForm()
         customer_form = CustomerForm()
     return render(request, 'clientes/create.html', {'user_form': user_form, 'customer_form': customer_form
 })
 
+@transaction.atomic
 def update_user(request):
-
     if request.method == 'POST':
         customer_form = CustomerForm(request.POST, request.FILES, instance= request.user.customer)
         user_form = UserForm(request.POST, instance = request.user)
@@ -124,7 +100,7 @@ def contactUs(request):
             sender = form.cleaned_data['sender']
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
-            send_mail(subject, message, sender, ['carrascoperez90@gmail.com',], fail_silently=False)
+            send_mail(subject, message, sender, ['felixreyesf@gmail.com',], fail_silently=False)
             return redirect(reverse('contact') + '?success')
     else:
         form = ContactUsForm()

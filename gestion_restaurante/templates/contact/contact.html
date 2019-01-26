@@ -22,30 +22,7 @@
             <div class="mt-5 text-center">
                 <form action="" method="POST">
                     {% csrf_token %}
-                    {% comment %} {% for field in form %}
-                        <div class="fieldWrapper">
-                            {{ field.errors }}
-                            {{ field.label_tag }} {{ field }}
-                            {% if field.help_text %}
-                                <p class="help">{{ field.help_text|safe }}</p>
-                            {% endif %}
-                        </div>
-                    {% endfor %} {% endcomment %}
-                    {% comment %} <div class="fieldWrapper">
-                        {{ form.subject.errors }}
-                        <label for="{{ form.subject.id_for_label }}">Email subject:</label>
-                        {{ form.subject }}
-                    </div>
-                    <div class="fieldWrapper">
-                        {{ form.message.errors }}
-                        <label for="{{ form.message.id_for_label }}">Your message:</label>
-                        {{ form.message }}
-                    </div>
-                    <div class="fieldWrapper">
-                        {{ form.sender.errors }}
-                        <label for="{{ form.sender.id_for_label }}">Your email address:</label>
-                        {{ form.sender }}
-                    </div> {% endcomment %}
+                    
                     <div class="form-group row text-center">
                         <label class="col-md-2 col-form-label" for="sender">Email</label>
                         <div class="col-md-10">
