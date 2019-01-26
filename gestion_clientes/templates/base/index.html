@@ -22,7 +22,13 @@
                 </small>
                 <div class="listLinks mt-3">
                     <a href="{% url 'home' %}">Home</a>
-                    <a href="{% url 'customersIndex' %}">Clientes</a>
+                    {% if request.is_authenticated %}
+                        {% if not request.user.is_staff %}
+                            <a href="{% url 'customersIndex' %}">Clientes</a>
+                        {% else %}
+                            <a href="{% url 'customerDetails' request.user.customer.id %}">Perfil</a>
+                        {% endif %}
+                    {% endif %}
                     <a href="{% url 'reviewsIndex' %}">Opiniones</a>
                     <a href=" {% url 'contact' %} ">Contacto</a>
                 </div>
