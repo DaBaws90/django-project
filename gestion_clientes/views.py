@@ -1,11 +1,11 @@
-from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
+from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, HttpResponseRedirect
 from gestion_clientes.models import Customer, Review
 from gestion_restaurante.forms import ContactUsForm
 from .forms import CustomerForm, UserForm, ReviewForm, UserUpdateForm
 from django.db import transaction
 from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
 
@@ -27,7 +27,9 @@ class CustomerDetailsPage(DetailView):
 class CustomerDeletePage(DeleteView):
     model = User
     context_object_name = "user"
-    success_url = reverse_lazy('customersIndex')
+    
+    def get_success_url(self):
+        return reverse_lazy('customersIndex') + "?deleted"
 
 @transaction.atomic
 def create_user(request):
@@ -82,7 +84,11 @@ def update_user2(request, pk):
 
             # El objeto user lleva con él toda la información del customer, y lo guarda mediante el método que declaramos
             # en el modelo customer (el que intercepta la señal 'signal' con el decorador @receiver(post_save)) 
-            user_form.save()
+            user = user_form.save() 
+            user.refresh_from_db()
+            # customer_form = CustomerForm(customer_form.cleaned_data, request.FILES, instance=user.customer)
+            # customer_form.full_clean()
+            customer_form.save()
             return redirect(reverse('home') + '?updated')
             # Todo esto es necesario porque el form de UserCreationForm valida los usernames como únicos, por lo que
             # el formulario nos dice que el username ya está en uso (Con esto, pasamos por encima de esa validación)
@@ -113,13 +119,31 @@ class ReviewsCreatePage(CreateView):
     form_class = ReviewForm
 
     def get_success_url(self):
-        return reverse('reviewsIndex')
+        return reverse('reviewsIndex') + "?created"
+
+    def post(self, request):
+        form = self.get_form()
+        if form.is_valid():  
+            form.save(request=self.request)
+            return HttpResponseRedirect(self.get_success_url())
+
+class ReviewUpdatePage(UpdateView):
+    model = Review
+    template_name = "reviews/update.html"
+    form_class = ReviewForm
+
+    def get_success_url(self):
+        return self.request.path + "?updated"
+
+class ReviewDeletePage(DeleteView):
+    model = Review
+    context_object_name = "review"
+    
+    def get_success_url(self):
+        return reverse_lazy('reviewsIndex') + "?deleted"
 
     # Cuando esté implementado el login, habilitar esto y añadir exclude al form de Review, y comentar el atributo author en modelo
-    # def form_valid(self, form):
-    #     obj = form.save(commit=False)
-    #     obj.author = self.request.user.customer
-    #     obj.save()
+    
 
 def contactUs(request):
     if request.method == "POST":

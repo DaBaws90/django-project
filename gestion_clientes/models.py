@@ -65,7 +65,11 @@ def create_user_customer(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def update_user_customer(sender, instance, **kwargs):
-    instance.customer.save()
+    print("instance updated: " + str(instance) + ", kwargs: " + str(kwargs))
+    temp = Customer.objects.filter(user=instance)
+    if temp.count() > 0:
+        # temp.first().save()
+        instance.customer.save()
 
 @receiver(pre_save, sender = Customer)
 def pre_save_slug(sender, **kwargs):
@@ -79,7 +83,7 @@ class Review(models.Model):
     published = models.DateTimeField(auto_now_add = True, verbose_name = "Fecha de publicación")
     valoration = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], verbose_name = "Valoración")
     edited = models.DateTimeField(auto_now = True, verbose_name = "Fecha de edición")
-    author = models.ForeignKey(Customer, on_delete = models.CASCADE, verbose_name = "Escrito por", related_name= "reviews")
+    author = models.ForeignKey(Customer, on_delete = models.CASCADE, verbose_name = "Escrito por", related_name= "reviews", null = True, blank = True)
 
     def info(self):
         return "{}, por {}".format(self.title, self.author)

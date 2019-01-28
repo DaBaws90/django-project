@@ -92,8 +92,8 @@ class ReviewForm(forms.ModelForm):
 
     class Meta:
         model = Review
-        fields = '__all__'
-        # exclude = ['author',]
+        # fields = '__all__'
+        exclude = ['author',]
         widgets = {
             'title': forms.TextInput(
                 attrs= {'class': 'form-group'}
@@ -121,6 +121,15 @@ class ReviewForm(forms.ModelForm):
 
     # author = forms.ModelChoiceField(label = "Escrito por", queryset = Customer.objects.all(), empty_label= "Seleccione un cliente")
     # Obtener el author a través de la instance actual en lugar de seleccionarlo en desplegable (IMPLEMENTAR CON LOGIN O DA ERROR)
+
+    def save(self, commit=True ,*args, **kwargs):
+        request = None
+        if 'request' in kwargs:
+            request = kwargs.pop('request')
+        m = super().save(commit=False, *args, **kwargs)
+        if m.author is None and request is not None:
+            m.author = request.user.customer
+            m.save()
 
     def clean_title(self):
         if len(self.cleaned_data['title']) < 3 or len(self.cleaned_data['title']) > 30:

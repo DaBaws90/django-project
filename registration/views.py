@@ -36,29 +36,21 @@ def signup(request):
 
 @transaction.atomic
 def profile_update(request):
+    if request.user.is_staff:
+        return redirect('/admin/')
+
     if request.method == 'POST':
-        # if request.POST['username'] == request.user.username:
-        #     post = request.POST.copy()
-        #     post['username'] = "DUMMY"
-        #     request.POST = post
-        #     oldUsername = request.user.username
-
-        # if request.POST['username'] == "DUMMY":
-        #     post = request.POST.copy()
-        #     post['username'] = request.user.username
-        #     request.POST = post
-
         customer_form = CustomerForm(request.POST, request.FILES, instance=request.user.customer)
         user_form = UserUpdateForm(request.POST, instance=request.user)
 
         if customer_form.is_valid() and user_form.is_valid():
-            # if user_form.cleaned_data['username'] == "DUMMY":
-            #     request.user.username = oldUsername
-
             user_form.save()
             return redirect(reverse('home') + '?updated')
     else:
         user_form = UserUpdateForm(instance=request.user)
+        # if not request.user.is_staff:
         customer_form = CustomerForm(instance=request.user.customer)
+        # else:
+        #     customer_form = CustomerForm(instance = None)
         
     return render(request, 'registration/profile_update.html', {'customer_form': customer_form, 'user_form':user_form})

@@ -21,8 +21,11 @@
                         <h6 class="card-text">Dirección:  {{ customer.address }}</h6>
                     </div>
                     <div class="card-body">
-                        {% load staticfiles %}
-                        <img class="img-fluid rounded mx-auto d-block" src="{% static "clientes/images/fifa18.jpg" %}" alt="My image">
+                        {% if customer.image %}
+                            <img class="img-fluid rounded mx-auto d-block" src="{{ customer.image.url }}" alt="My image">
+                        {% else %}
+                            <img class="img-fluid rounded mx-auto d-block" src={% static 'default.jpg' %} alt="My image">
+                        {% endif %}
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">

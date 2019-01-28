@@ -8,7 +8,7 @@ from .views import (
 urlpatterns = [
     path('', HomePage.as_view(), name = "home"),
     path('clientes/', CustomerListPage.as_view(), name = "customersIndex"),
-    path('clientes/<int:id>/<slug:slug>/', CustomerDetailsPage.as_view(), name = "customerDetails"),
+    path('clientes/<int:pk>/<slug:slug>/', CustomerDetailsPage.as_view(), name = "customerDetails"),
     # path('create/', CustomerCreatePage.as_view(), name = "customersCreate"),
     path('create/', views.create_user, name = "customersCreate"),
     path('update/<int:pk>/', views.update_user2, name = "customersUpdate"),
