@@ -140,3 +140,6 @@ EMAIL_HOST_PASSWORD = 'papasconchoco'
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DEFAULT_FROM_EMAIL = "luitomachida0@gmail.com"
+
+# LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "home"

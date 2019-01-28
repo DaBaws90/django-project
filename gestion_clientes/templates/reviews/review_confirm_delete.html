@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 
-{% block title %}Delete User{% endblock title %}
+{% block title %}Delete Review{% endblock title %}
 
 {% load static %}
 {% block css %}
@@ -15,11 +15,11 @@
             <div class="text-center">
                 <form class="alert alert-danger" action="" method="POST">
                     {% csrf_token %}
-                    <h3 class="alert alert-danger">¿Realmente desea eliminar el usuario {{ object }}?</h3>
+                    <h3 class="alert alert-danger">¿Realmente desea eliminar la opinión {{ review }}?</h3>
                     <input type="submit" class="btn btn-outline-danger btn-large" value="Confirmar">
                 </form>
             </div>
-            <a class="pt-2" href={% url 'customersIndex' %}><i class="fas fa-times"></i> Cancelar</a>
+            <a class="pt-2" href={% url 'reviewsIndex' %}><i class="fas fa-times"></i> Cancelar</a>
         </div>
     </div>
 </div>

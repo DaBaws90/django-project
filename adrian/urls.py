@@ -26,6 +26,7 @@ urlpatterns = [
     path('cliente/', include('gestion_clientes.urls')),
     path('', RedirectView.as_view(url = 'cliente/')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('registration.urls')),
 ]
 
 if settings.DEBUG:

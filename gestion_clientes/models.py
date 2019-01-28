@@ -59,7 +59,7 @@ class Customer(models.Model):
 
 @receiver(post_save, sender=User)
 def create_user_customer(sender, instance, created, **kwargs):
-    # print("instance: " + str(instance) + ", created: " + str(created) + ", kwargs: " + str(kwargs))
+    print("instance: " + str(instance) + ", created: " + str(created) + ", kwargs: " + str(kwargs))
     if created:
         Customer.objects.create(user = instance)
 

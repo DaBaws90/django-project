@@ -2,7 +2,7 @@
 
 {% load widget_tweaks %}
 
-{% block title %} Update Customer {% endblock title %}
+{% block title %} Update Profile {% endblock title %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-md-8 offset-md-2">
             <div class="text-center mt-5">
-                <h3 class="mt-3 mb-5">Editar usuario</h3>
+                <h3 class="mt-3 mb-5">Perfil de usuario</h3>
                 <form action="" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
 
@@ -90,9 +90,9 @@
 
                     <div class="form-group row mb-3 mt-5">
                         <div class="col-md-12 text-center">
-                            <a class="float-left pt-2" href={% url 'customersIndex' %}><i class="fas fa-chevron-left"></i> Volver</a>
+                            <a class="float-left pt-2" href={% url 'home' %}><i class="fas fa-chevron-left"></i> Volver</a>
                             <button style="position: relative; left: -3%;" type="submit" class="btn btn-outline-primary">
-                                Añadir
+                                Guardar cambios
                             </button>
                         </div>
                     </div>

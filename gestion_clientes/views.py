@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from gestion_clientes.models import Customer, Review
 from gestion_restaurante.forms import ContactUsForm
-from .forms import CustomerForm, UserForm, ReviewForm
+from .forms import CustomerForm, UserForm, ReviewForm, UserUpdateForm
 from django.db import transaction
 from django.urls import reverse, reverse_lazy
 from django.core.mail import send_mail
@@ -17,7 +17,7 @@ class HomePage(TemplateView):
 class CustomerListPage(ListView):
     model  = Customer
     template_name = "clientes/index.html"
-    queryset = Customer.objects.all()
+    queryset = Customer.objects.order_by("id")
 
 class CustomerDetailsPage(DetailView):
     model = Customer
@@ -54,30 +54,30 @@ def update_user2(request, pk):
     user = User.objects.get(id = pk)
     if request.method == 'POST':
         # Evaluamos si no ha cambiado el username
-        if request.POST['username'] == user.username:
-            # Hay que hacer esto porque el objeto request.POST es inmutable
-            post = request.POST.copy()
-            post['username'] = "DUMMY"
-            request.POST = post
-            # Asignamos el antiguo username a variable porque al validar el formulario, se guarda el objeto user 
-            # con el valor "DUMMY" y por tanto, necesitamos recuperarlo de alguna otra manera (con esta variable)
-            oldUsername = user.username
+        # if request.POST['username'] == user.username:
+        #     # Hay que hacer esto porque el objeto request.POST es inmutable
+        #     post = request.POST.copy()
+        #     post['username'] = "DUMMY"
+        #     request.POST = post
+        #     # Asignamos el antiguo username a variable porque al validar el formulario, se guarda el objeto user 
+        #     # con el valor "DUMMY" y por tanto, necesitamos recuperarlo de alguna otra manera (con esta variable)
+        #     oldUsername = user.username
 
-        if request.POST['username'] == "DUMMY":
-            # Si el request['username] es igual a DUMMY, e que hubo error de validaión en el formulario del Customer.
-            # Reseteamos manualmente el campo o de lo contrario, el formulario reflejará DUMMY en el campo username
-            post = request.POST.copy()
-            post['username'] = user.username
-            request.POST = post
+        # if request.POST['username'] == "DUMMY":
+        #     # Si el request['username] es igual a DUMMY, e que hubo error de validaión en el formulario del Customer.
+        #     # Reseteamos manualmente el campo o de lo contrario, el formulario reflejará DUMMY en el campo username
+        #     post = request.POST.copy()
+        #     post['username'] = user.username
+        #     request.POST = post
 
         customer_form = CustomerForm(request.POST, request.FILES, instance=user.customer)
-        user_form = UserForm(request.POST, instance=user)
+        user_form = UserUpdateForm(request.POST, instance=user)
 
         if customer_form.is_valid() and user_form.is_valid():
-            if user_form.cleaned_data['username'] == "DUMMY":
+            # if user_form.cleaned_data['username'] == "DUMMY":
                 # Si el valor del username del form es DUMMY, es que no lo habíamos cambiado en el form, por lo que 
                 # asignamos de nuevo el valor antiguo
-                user.username = oldUsername
+                # user.username = oldUsername
                 # user_form.cleaned_data['username'] = oldUsername
 
             # El objeto user lleva con él toda la información del customer, y lo guarda mediante el método que declaramos
@@ -89,10 +89,12 @@ def update_user2(request, pk):
         # else:
         #     messages.error(request, _('Please correct the error below.'))
     else:
-        user_form = UserForm(instance=user)
+        user_form = UserUpdateForm(instance=user)
         customer_form = CustomerForm(instance=user.customer)
         
     return render(request, 'clientes/update.html', {'customer_form': customer_form, 'user_form':user_form})
+
+
 
 class ReviewsListPage(ListView):
     model  = Review
@@ -113,6 +115,7 @@ class ReviewsCreatePage(CreateView):
     def get_success_url(self):
         return reverse('reviewsIndex')
 
+    # Cuando esté implementado el login, habilitar esto y añadir exclude al form de Review, y comentar el atributo author en modelo
     # def form_valid(self, form):
     #     obj = form.save(commit=False)
     #     obj.author = self.request.user.customer

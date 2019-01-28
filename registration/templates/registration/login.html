@@ -1,2 +1,31 @@
 {% extends 'base/base.html' %}
-<h2>TEST</h2>
+
+{% block title %}Login{% endblock %}
+
+{% load static %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'registration/css/login.css' %}">
+{% endblock css %}
+
+{% block content %}
+<div class="container flex-container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="text-center">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {% include 'base/form_base.html' with form=form %}
+                    <div class="form-group row mb-3 mt-5">
+                        <div class="col-md-12 text-center">
+                            <a class="float-left pt-2" href={% url 'home' %}><i class="fas fa-chevron-left"></i> Volver</a>
+                            <button style="position: relative; left: -3%;" type="submit" class="btn btn-outline-primary">
+                                Login
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

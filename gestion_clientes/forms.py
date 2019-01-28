@@ -49,8 +49,8 @@ class CustomerForm(forms.ModelForm):
             return self.cleaned_data['address'][:1].upper() + self.cleaned_data['address'][1:]
     
 
-class UserForm(UserCreationForm): # Podríamos usar UserCreationForm
-    
+class UserForm(UserCreationForm):
+
     class Meta:
         model = User
         fields = ('username', 'email')
@@ -63,6 +63,29 @@ class UserForm(UserCreationForm): # Podríamos usar UserCreationForm
         help_text = {
             'username': ('Obligatorio. 150 carácteres o menos. Letras, números y @/./+/-/_ permitidos.'),
         }
+
+    def clean_email(self):
+        if User.objects.filter(email = self.cleaned_data['email']).exists():
+            print("EXISTE")
+            raise forms.ValidationError("The specified email already exists. Please, choose another one")
+        else:
+            return self.cleaned_data['email']
+
+class UserUpdateForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = ('username', 'email')
+        error_messages = {
+            'username': {
+                'unique': ('El nombre de usuario debe ser único'),
+                'max_length': ('Demasiado largo. Máximo de carácteres: 150'),
+            },
+        }
+        help_text = {
+            'username': ('Obligatorio. 150 carácteres o menos. Letras, números y @/./+/-/_ permitidos.'),
+        }
+
 
 
 class ReviewForm(forms.ModelForm):
