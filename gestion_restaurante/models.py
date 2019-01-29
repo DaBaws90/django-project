@@ -3,6 +3,8 @@ from django.db import models
 from gestion_clientes.models import Review, Customer
 from django.core.validators import DecimalValidator, MinValueValidator
 import time
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -27,42 +29,43 @@ class Place(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length = 30, verbose_name = "Producto")
-    description = models.TextField(max_length = 80, verbose_name = "Descripción")
-    stock = models.IntegerField(verbose_name= "Unidades", blank=True, null=True)
-    weigth = models.DecimalField(verbose_name="Peso", blank=True, null=True, validators=[DecimalValidator],max_digits = 7 , decimal_places = 2)
+    description = models.TextField(max_length = 120, verbose_name = "Descripción")
     created = models.DateTimeField(auto_now_add= True, verbose_name= "Fabricado el")
     updated = models.DateTimeField(auto_now= True, verbose_name= "Modificado el")
 
     def __str__(self):
-        return "Producto: {}".format(self.name)
+        return "{}".format(self.name)
 
     class Meta:
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
-        ordering = ('name','stock','weigth', 'created', 'updated')
+        ordering = ('name', 'created', 'updated')
 
 
 
 class Order(models.Model):
-    # order_ref = models.AutoField(verbose_name= "ID Referencia", editable=False)
+    order_ref = models.BigIntegerField(verbose_name= "ID Referencia", editable=False)
     product = models.ForeignKey(Product, verbose_name = "Productos", on_delete = models.CASCADE, related_name= "productOrder")
-    customer = models.ForeignKey(Customer, verbose_name = "Cliente", on_delete = models.CASCADE, related_name= "customerOrder")
+    customer = models.ForeignKey(Customer, verbose_name = "Cliente", on_delete = models.CASCADE, related_name= "customerOrder", 
+        null = True, blank = True)
     date = models.DateTimeField(auto_now_add=True, verbose_name= "Fecha")
-    comment = models.CharField(max_length = 150, verbose_name = "Comentario")
-
-    @property
-    def order_ref(self):
-        return int(round(time.time() * 1000))
+    weigth = models.DecimalField(verbose_name="Peso", blank=True, null=True, validators=[MinValueValidator(0.01)], max_digits=7, decimal_places=2)
+    stock = models.IntegerField(verbose_name= "Unidades", blank=True, null=True)
+    comment = models.CharField(max_length = 150, verbose_name = "Comentario", null = True, blank = True)
 
     def __str__(self):
-        return "Pedido # {}, at {}".format(self.order_ref, self.date)
+        return "Pedido # {}".format(self.order_ref)
 
     class Meta:
         verbose_name = "Pedido"
         verbose_name_plural = "Pedidos"
-        ordering = ('date',)
+        ordering = ('date', 'product', 'customer', 'stock', 'weigth')
 
-
+@receiver(pre_save, sender = Order)
+def pre_save_ref(sender, **kwargs):
+    if not kwargs['instance'].order_ref:
+        ref = int(round(time.time() * 1000))
+        kwargs['instance'].order_ref = ref
 
 class Restaurant(models.Model):
     name = models.CharField(max_length = 35, verbose_name = "Nombre")

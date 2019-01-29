@@ -24,8 +24,8 @@
                             <div class="card-body">
                                 <a href="{% url 'reviewDetails' r.id %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
                                 {% comment %} {% if request.user.is_staff %} {% endcomment %}
-                                    <a onclick="return confirm('¿Eliminar usuario?')" href="{% url 'customersDelete' r.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
-                                    <a href="{% url 'customersUpdate' r.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
+                                    <a onclick="return confirm('¿Eliminar opinión?')" href="{% url 'reviewsDelete' r.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
+                                    <a href="{% url 'reviewUpdate' r.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
                                 {% comment %} {% endif %} {% endcomment %}
                             </div>
                         {% comment %} {% endif %} {% endcomment %}

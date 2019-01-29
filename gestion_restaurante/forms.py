@@ -72,12 +72,12 @@ class ProductForm(forms.ModelForm):
         fields = '__all__'
 
         widgets = {
-            # 'comment': forms.Textarea(
-            #     attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': 'Escriba aquí su comentario'}
-            # ),
+            'description': forms.Textarea(
+                attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': 'Escriba aquí la descripción'}
+            ),
         }
         help_texts = {
-            # 'comment': ('¿Algo que desee comentarnos acerca del pedido?'),
+            'description': ('Breve descripción del producto. Máximo de 120 carácteres'),
         }
         error_messages = {
             # 'comment': {
@@ -109,7 +109,8 @@ class OrderForm(forms.ModelForm):
 
     class Meta:
         model = Order
-        fields = '__all__'
+        # fields = ['comment', 'stock', 'weigth', 'product']
+        exclude = ['customer',]
 
         widgets = {
             'comment': forms.Textarea(
@@ -120,6 +121,9 @@ class OrderForm(forms.ModelForm):
             'comment': ('¿Algo que desee comentarnos acerca del pedido?'),
             # 'date': ('Introduzca la fecha de realización del pedido'),
             'product': ('Indique el producto que contiene el pedido'),
+            'weigth': ('Indique la cantidad deseada (Kgs). Debe indicar alguna de las dos cantidades'),
+            'stock': ("Indique la cantidad deseada (Unidades). Debe indicar alguna de las dos cantidades"),
+
         }
         error_messages = {
             'comment': {
@@ -130,12 +134,38 @@ class OrderForm(forms.ModelForm):
     product = forms.ModelChoiceField(label = "Producto", queryset = Product.objects.all(), empty_label= "Seleccione un producto")
 
     # Mirar cómo añadir cliente desde aquí
-    customer = forms.ModelChoiceField(label = "Cliente", queryset = Customer.objects.all(), empty_label= "Seleccione un cliente")
+    # customer = forms.ModelChoiceField(label = "Cliente", queryset = Customer.objects.all(), empty_label= "Seleccione un cliente")
 
     def clean_comment(self):
-        if len(self.cleaned_data['comment'] > 150):
+        # if self.cleaned_data['comment'] != "":
+        if len(self.cleaned_data['comment']) > 150:
             raise forms.ValidationError("El campo no puede exceder los 150 carácteres de longitud")
         else:
-            return self.cleaned_data['comment'].capitalize()
+            return self.cleaned_data['comment']
+
+    def save(self, commit=True ,*args, **kwargs):
+        request = None
+        if 'request' in kwargs:
+            request = kwargs.pop('request')
+        obj = super().save(commit=False, *args, **kwargs)
+        if obj.customer is None and request is not None:
+            obj.customer = request.user.customer
+        obj.save()
+
+    # def save(self, commit=True ,*args, **kwargs):
+    #     request = None
+    #     if 'request' in kwargs:
+    #         request = kwargs.pop('request')
+    #     obj = super().save(commit=False, *args, **kwargs)
+    #     if obj.customer is None and request is not None:
+    #         print("CUSTOMER NONE: "+str(request.user.customer))
+    #         temp = Customer.objects.filter(user = request.user)
+    #         if temp.count() > 0:
+    #             print("CUTOMER INSTANCE FOUND")
+    #             obj.customer = temp
+    #         else:
+    #             obj.customer = None
+    #     print("SAVING CUSTOMER")
+    #     obj.save()
 
 

@@ -33,6 +33,8 @@ class PlaceAdmin(admin.ModelAdmin):
 class OrderInline(admin.TabularInline):
     model = Order
     extra = 1
+    can_delete = False
+    verbose_name_plural = "Pedido"
 
 class OrderAdmin(admin.ModelAdmin):
     form = OrderForm
@@ -40,11 +42,12 @@ class OrderAdmin(admin.ModelAdmin):
     actions_on_top = False
     list_per_page = 5
     list_max_show_all = 50
-    fields = [('product', 'customer'), 'comment']
-    search_fields = ['product', 'customer', 'date', 'comment']
-    list_filter = ['product', 'customer', 'date']
+    fields = [('product', 'customer'),'weigth', 'stock', 'comment']
+    search_fields = ['product', 'customer', 'date', 'weigth', 'stock', 'comment']
+    list_filter = ['product', 'customer', 'weigth', 'stock', 'date']
     list_display_links = ['product', 'customer', 'date']
-    list_display = ['product', 'customer', 'date']
+    list_display = ['product', 'customer', 'weigth', 'stock', 'date']
+    ordering = ['date', 'weigth', 'stock', 'product', 'customer']
     date_hierarchy = 'date'
 
 class ProductAdmin(admin.ModelAdmin):
@@ -54,11 +57,11 @@ class ProductAdmin(admin.ModelAdmin):
     list_max_show_all = 50
     list_per_page = 10
     inlines = [OrderInline,]
-    fields = ['name', ('stock', 'weigth')]
-    search_fields = ['name', 'stock', 'weigth', 'created', 'updated']
-    list_filter = ['name', 'stock', 'weigth', 'created', 'updated']
-    list_display_links = ['name', 'stock', 'weigth']
-    list_display = ['name', 'stock', 'weigth', 'created', 'updated']
+    fields = ['name', 'description']
+    search_fields = ['name', 'created', 'updated']
+    list_filter = ['name', 'created', 'updated']
+    list_display_links = ['name',]
+    list_display = ['name', 'created', 'updated']
     date_hierarchy = 'created'
 
 

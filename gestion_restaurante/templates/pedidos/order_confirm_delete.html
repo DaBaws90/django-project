@@ -1,0 +1,26 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Delete Order{% endblock title %}
+
+{% load static %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'clientes/css/delete.css' %}">
+{% endblock css %}
+
+{% block content %}
+
+<div class="container flex-container mt-3">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 text-center">
+            <div class="text-center">
+                <form class="alert alert-danger" action="" method="POST">
+                    {% csrf_token %}
+                    <h3 class="alert alert-danger">¿Realmente desea eliminar el pedido {{ order }}?</h3>
+                    <input type="submit" class="btn btn-outline-danger btn-large" value="Confirmar">
+                </form>
+            </div>
+            <a class="pt-2" href={% url 'ordersIndex' %}><i class="fas fa-times"></i> Cancelar</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

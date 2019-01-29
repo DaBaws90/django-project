@@ -1,0 +1,62 @@
+{% extends 'base/base.html' %}
+
+{% block title %} Pedidos {% endblock title %}
+
+{% load static %}
+{% block css %} 
+<link rel="stylesheet" type="text/css" href="{% static 'clientes/css/index.css' %}">
+{% endblock css %}
+
+{% block content %}
+
+<div class="container flex-container mt-3">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="text-center">
+                <h2 class="mt-3 mb-5">Registered orders</h2>
+                {% if 'created' in request.GET %}
+                <div class="alert alert-success alert-dismissible fade show">Se ha registrado con éxito el pedido
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif %}
+                {% if 'deleted' in request.GET %}
+                <div class="alert alert-success alert-dismissible fade show">Se ha eliminado con éxito el pedido
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif %}
+                {% for o in object_list %}
+                    <div class="card mb-2 ">
+                        <div class="card-header">
+                            <h5 class="mt-2">Pedido # {{ o.order_ref }}</h5>
+                        </div>
+                        {% comment %} {% if request.is_Authenticated %} {% endcomment %}
+                            <div class="card-body">
+                                <a href="{% url 'orderDetails' o.id %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
+                                {% comment %} {% if request.user.is_staff %} {% endcomment %}
+                                    <a href="{% url 'orderDelete' o.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
+                                    <a href="{% url 'orderUpdate' o.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
+                                {% comment %} {% endif %} {% endcomment %}
+                            </div>
+                        {% comment %} {% endif %} {% endcomment %}
+                    </div>
+                    
+                {% empty %}
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="alert alert-danger">Lo sentimos!</h4>
+                        </div>
+                        <div class="card-body">
+                            Parece que no hay ningún pedido registrado en nuestro sistema.
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

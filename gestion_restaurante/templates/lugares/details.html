@@ -1,0 +1,43 @@
+{% extends 'base/base.html' %}
+
+{% block title %} Detalles del lugar {% endblock title %}
+
+{% load static %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'clientes/css/details.css' %}">
+{% endblock css %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="text-center">
+                <h2 class="mt-3 mb-5">Place's details</h2>
+                <div class="card border-primary">
+                    <div class="card-header border-primary">
+                        <h5 class="mt-2">Dirección:  {{ place.address }}</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <small class="text-muted">Ciudad y país: {{ place.city }} ({{ place.country }}) </small>
+                        </li>
+                        <li class="list-group-item">
+                            <small class="text-muted">Código postal: {{ place.zipCode }} </small>
+                        </li>
+                    </ul>
+                    <div class="card-header">
+                        <h6 class="card-text">Establecimiento ubicado en este lugar:</h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted"> {{ place.restaurant|default:"(Ningún establecimiento en esta ubicación)"}}</p>
+                    </div>
+                    <div class="card-footer p-0 link">
+                        <a href="{% url 'placesIndex' %}" class="btn btn-block btn-outline-info"> Atrás</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

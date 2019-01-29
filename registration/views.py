@@ -13,8 +13,8 @@ class SignIn(LoginView):
     form_class = AuthenticationForm
     template_name = "registration/login.html"
 
-    # def get_success_url(self):
-    #     return reverse_lazy("home") + "?signin"
+    def get_success_url(self):
+        return reverse_lazy("profile") + "?signin"
 
 @transaction.atomic
 def signup(request):
@@ -45,12 +45,9 @@ def profile_update(request):
 
         if customer_form.is_valid() and user_form.is_valid():
             user_form.save()
-            return redirect(reverse('home') + '?updated')
+            return redirect(reverse('profile') + '?updated')
     else:
         user_form = UserUpdateForm(instance=request.user)
-        # if not request.user.is_staff:
         customer_form = CustomerForm(instance=request.user.customer)
-        # else:
-        #     customer_form = CustomerForm(instance = None)
         
     return render(request, 'registration/profile_update.html', {'customer_form': customer_form, 'user_form':user_form})

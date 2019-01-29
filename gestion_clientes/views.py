@@ -55,43 +55,17 @@ def create_user(request):
 def update_user2(request, pk):
     user = User.objects.get(id = pk)
     if request.method == 'POST':
-        # Evaluamos si no ha cambiado el username
-        # if request.POST['username'] == user.username:
-        #     # Hay que hacer esto porque el objeto request.POST es inmutable
-        #     post = request.POST.copy()
-        #     post['username'] = "DUMMY"
-        #     request.POST = post
-        #     # Asignamos el antiguo username a variable porque al validar el formulario, se guarda el objeto user 
-        #     # con el valor "DUMMY" y por tanto, necesitamos recuperarlo de alguna otra manera (con esta variable)
-        #     oldUsername = user.username
-
-        # if request.POST['username'] == "DUMMY":
-        #     # Si el request['username] es igual a DUMMY, e que hubo error de validaión en el formulario del Customer.
-        #     # Reseteamos manualmente el campo o de lo contrario, el formulario reflejará DUMMY en el campo username
-        #     post = request.POST.copy()
-        #     post['username'] = user.username
-        #     request.POST = post
 
         customer_form = CustomerForm(request.POST, request.FILES, instance=user.customer)
         user_form = UserUpdateForm(request.POST, instance=user)
 
         if customer_form.is_valid() and user_form.is_valid():
-            # if user_form.cleaned_data['username'] == "DUMMY":
-                # Si el valor del username del form es DUMMY, es que no lo habíamos cambiado en el form, por lo que 
-                # asignamos de nuevo el valor antiguo
-                # user.username = oldUsername
-                # user_form.cleaned_data['username'] = oldUsername
-
-            # El objeto user lleva con él toda la información del customer, y lo guarda mediante el método que declaramos
-            # en el modelo customer (el que intercepta la señal 'signal' con el decorador @receiver(post_save)) 
             user = user_form.save() 
             user.refresh_from_db()
             # customer_form = CustomerForm(customer_form.cleaned_data, request.FILES, instance=user.customer)
             # customer_form.full_clean()
             customer_form.save()
             return redirect(reverse('home') + '?updated')
-            # Todo esto es necesario porque el form de UserCreationForm valida los usernames como únicos, por lo que
-            # el formulario nos dice que el username ya está en uso (Con esto, pasamos por encima de esa validación)
         # else:
         #     messages.error(request, _('Please correct the error below.'))
     else:
@@ -127,6 +101,8 @@ class ReviewsCreatePage(CreateView):
             form.save(request=self.request)
             return HttpResponseRedirect(self.get_success_url())
 
+        return render(request, "reviews/update.html", {'form':form})
+
 class ReviewUpdatePage(UpdateView):
     model = Review
     template_name = "reviews/update.html"
@@ -135,15 +111,14 @@ class ReviewUpdatePage(UpdateView):
     def get_success_url(self):
         return self.request.path + "?updated"
 
+
 class ReviewDeletePage(DeleteView):
     model = Review
     context_object_name = "review"
+    template_name = "reviews/review_confirm_delete.html"
     
     def get_success_url(self):
         return reverse_lazy('reviewsIndex') + "?deleted"
-
-    # Cuando esté implementado el login, habilitar esto y añadir exclude al form de Review, y comentar el atributo author en modelo
-    
 
 def contactUs(request):
     if request.method == "POST":

@@ -14,7 +14,7 @@ class ReviewInline(admin.TabularInline):
     extra = 1
     can_delete = False
 
-# Creamos una opción para el menú desplegables del panel de adminstración, en el que está la opcón de eliminar los
+# Creamos una opción para el menú desplegables del panel de administración, en el que está la opcón de eliminar los
 #  registros seleccionados
 def reset_email_info(self, request, queryset):
     cont = queryset.update(email = None)

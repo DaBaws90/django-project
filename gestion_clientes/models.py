@@ -34,6 +34,7 @@ class Customer(models.Model):
     @property
     def edad(self):
         if self.birthday is not None:
+            # Pendiente de convertir el date a string y luego a int
             bd = datetime.date(self.birthday)
             today = datetime.datetime.today()
             
@@ -87,6 +88,13 @@ class Review(models.Model):
 
     def info(self):
         return "{}, por {}".format(self.title, self.author)
+
+    @property
+    def stars(self):
+        if self.valoration > 0:
+            return "Valoración ({})".format("*" * self.valoration)
+        else:
+            return "Valoración (0 estrellas)"
 
     def __str__(self):
         return "{}".format(self.info())
