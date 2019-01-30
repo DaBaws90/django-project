@@ -22,7 +22,9 @@
                     </div>
                     <div class="card-body">
                         {% if customer.image %}
-                            <img class="img-fluid rounded mx-auto d-block" src="{{ customer.image.url }}" alt="My image">
+                        {% load thumbnail %}
+                            {% thumbnail customer.image 300x300 quality=99 as p %}
+                            <img class="img-fluid rounded mx-auto d-block" src="{{ p.url }}" width="{{ p.width }}" height="{{ p.height }}" alt="My image">
                         {% else %}
                             <img class="img-fluid rounded mx-auto d-block" src={% static 'default.jpg' %} alt="My image">
                         {% endif %}

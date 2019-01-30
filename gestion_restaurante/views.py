@@ -140,7 +140,7 @@ class RestaurantDetailsPage(DetailView):
 
 class RestaurantCreatePage(CreateView):
     model = Product
-    form_class = ProductForm
+    form_class = RestaurantForm
     template_name = "restaurante/create.html"
 
     def get_success_url(self):
@@ -152,7 +152,7 @@ class RestaurantUpdatePage(UpdateView):
     template_name = "restaurante/update.html"
 
     def get_success_url(self):
-        return self.request.path + '?updated'
+        return reverse('restaurantsIndex') + '?updated'
 
 class RestaurantDeletePage(DeleteView):
     model = Restaurant

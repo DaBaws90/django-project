@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'gestion_restaurante',
     'gestion_clientes',
     'widget_tweaks',
-    'ckeditor',
+    'reversion',
+    'easy_thumbnails',
 ]
 
 MIDDLEWARE = [

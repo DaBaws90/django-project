@@ -28,6 +28,9 @@ class ContactUsForm(forms.Form):
         else:
             return self.cleaned_data['message'].capitalize()
 
+class DateInput(forms.DateInput):
+    input_type = "date"
+
 class RestaurantForm(forms.ModelForm):
     
     class Meta:
@@ -43,6 +46,11 @@ class RestaurantForm(forms.ModelForm):
             'built': forms.DateInput(
                 attrs={'class': 'form-group', 'placeholder': 'Fecha de la que data el establecimiento', 'required':True}
             )
+        }
+        widgets = { 
+            'built': DateInput(
+                format='%Y-%m-%d'
+            ),
         }
         help_texts = {
             'name': ('Nombre del establecimiento'),

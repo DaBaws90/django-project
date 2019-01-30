@@ -8,10 +8,12 @@ from django.contrib.auth.models import User
 # from gestion_restaurante.models import Order
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
-
+import reversion
+import easy_thumbnails.templatetags.thumbnail
 
 # Create your models here.
 
+@reversion.register()
 class Customer(models.Model):
     user = models.OneToOneField(User, verbose_name = "Usuario", on_delete = models.CASCADE)
     MALE = "M"
@@ -78,6 +80,7 @@ def pre_save_slug(sender, **kwargs):
     kwargs['instance'].slug = slug
 
 
+@reversion.register()
 class Review(models.Model):
     title = models.CharField(max_length = 40, verbose_name = "Título")
     content = models.TextField(max_length = 400, verbose_name = "Contenido")

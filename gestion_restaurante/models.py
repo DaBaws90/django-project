@@ -5,9 +5,11 @@ from django.core.validators import DecimalValidator, MinValueValidator, MaxValue
 import time
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+import reversion
 
 # Create your models here.
 
+@reversion.register()
 class Place(models.Model):
     address = models.CharField(max_length = 40, verbose_name = "Dirección")
     zipCode = models.IntegerField(verbose_name= "Código postal", null= True, blank= True, 
@@ -28,6 +30,7 @@ class Place(models.Model):
         ordering = ('address', 'city', 'country', 'zipCode')
 
 
+@reversion.register()
 class Product(models.Model):
     name = models.CharField(max_length = 30, verbose_name = "Producto")
     description = models.TextField(max_length = 120, verbose_name = "Descripción", null= True, blank= True)
@@ -43,7 +46,7 @@ class Product(models.Model):
         ordering = ('name', 'created', 'updated')
 
 
-
+@reversion.register()
 class Order(models.Model):
     order_ref = models.BigIntegerField(verbose_name= "ID Referencia", editable=False)
     product = models.ForeignKey(Product, verbose_name = "Productos", on_delete = models.CASCADE, related_name= "productOrder")
@@ -69,6 +72,7 @@ def pre_save_ref(sender, **kwargs):
         kwargs['instance'].order_ref = ref
 
 
+@reversion.register()
 class Restaurant(models.Model):
     name = models.CharField(max_length = 35, verbose_name = "Nombre")
     place = models.OneToOneField(Place, on_delete = models.CASCADE, verbose_name = "Ubicación", primary_key = True)
@@ -82,3 +86,8 @@ class Restaurant(models.Model):
         verbose_name = "Restaurante"
         verbose_name_plural = "Restaurantes"
         ordering = ('name', 'built', 'capacity')
+
+@receiver(pre_save, sender = Restaurant)
+def pre_save_place(sender, **kwargs):
+    place = Place.objects.get(id = kwargs['instance'].place.id)
+    Restaurant.objects.filter(name = kwargs['instance'].name).update(place = place)

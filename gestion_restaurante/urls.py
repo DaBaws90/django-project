@@ -4,7 +4,7 @@ from .views import (
     HomeRestaurantPage, OrdersListPage, OrderDetailsPage, OrderCreatePage, OrderUpdatePage, OrderDeletaPage,
     PlaceListPage, PlaceDetailsPage, PlaceCreatePage, PlaceUpdatePage, PlaceDeletePage,
     ProductListPage, ProductDetailsPage, ProductCreatePage, ProductUpdatePage, ProductDeletePage,
-
+    RestaurantListPage, RestaurantDetailsPage, RestaurantCreatePage, RestaurantUpdatePage, RestaurantDeletePage
 )
 from django.views.generic import RedirectView
 
@@ -25,4 +25,9 @@ urlpatterns = [
     path('productos/create', ProductCreatePage.as_view(), name = "productCreate"),
     path('productos/update/<int:pk>/', ProductUpdatePage.as_view(), name = "productUpdate"),
     path('productos/delete/<int:pk>/', ProductDeletePage.as_view(), name = "productDelete"),
+    path('restaurantes/', RestaurantListPage.as_view(), name = "restaurantsIndex"),
+    path('restaurantes/restaurante/<int:pk>/', RestaurantDetailsPage.as_view(), name = "restaurantDetails"),
+    path('restaurantes/create/', RestaurantCreatePage.as_view(), name = "restaurantCreate"),
+    path('restaurantes/update/<int:pk>/', RestaurantUpdatePage.as_view(), name = "restaurantUpdate"),
+    path('restaurantes/delete/<int:pk>/', RestaurantDeletePage.as_view(), name = "restaurantDelete"),
 ]
