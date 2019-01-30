@@ -1,10 +1,10 @@
 {% extends 'base/base.html' %}
 
-{% block title %} Opiniones {% endblock title %}
+{% block title %} Productos {% endblock title %}
 
 {% load static %}
-{% block css %}
-<link rel="stylesheet" type="text/css" href="{% static 'reviews/css/index.css' %}">
+{% block css %} 
+<link rel="stylesheet" type="text/css" href="{% static 'clientes/css/index.css' %}">
 {% endblock css %}
 
 {% block content %}
@@ -13,53 +13,50 @@
     <div class="row">
         <div class="col-md-8 offset-md-2">
             <div class="text-center">
-                <h2 class="mt-3 mb-5">Reviews wrote</h2>
+                <h2 class="mt-3 mb-5">Registered products</h2>
                 {% if 'created' in request.GET %}
-                <div class="alert alert-success alert-dismissible fade show">Se ha registrado con éxito la opinión
+                <div class="alert alert-success alert-dismissible fade show">Se ha registrado con éxito el producto
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 {% endif %}
                 {% if 'deleted' in request.GET %}
-                <div class="alert alert-success alert-dismissible fade show">Se ha eliminado con éxito la opinión
+                <div class="alert alert-success alert-dismissible fade show">Se ha eliminado con éxito el producto
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 {% endif %}
-                {% if reviews %}
-                    {% for r in reviews %}
+                {% for p in object_list %}
                     <div class="card mb-2 ">
                         <div class="card-header">
-                            <h5 class="mt-2">{{ r.title }}</h5>
+                            <h5 class="mt-2">Nombre: {{ p.name }}</h5>
                         </div>
                         {% comment %} {% if request.is_Authenticated %} {% endcomment %}
                             <div class="card-body">
-                                <a href="{% url 'reviewDetails' r.id %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
+                                <a href="{% url 'productDetails' p.id %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
                                 {% comment %} {% if request.user.is_staff %} {% endcomment %}
-                                    <a onclick="return confirm('¿Eliminar opinión?')" href="{% url 'reviewsDelete' r.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
-                                    <a href="{% url 'reviewUpdate' r.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
+                                    <a href="{% url 'productDelete' p.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
+                                    <a href="{% url 'productUpdate' p.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
                                 {% comment %} {% endif %} {% endcomment %}
                             </div>
                         {% comment %} {% endif %} {% endcomment %}
                     </div>
-                    {% endfor %}
                     
-                {% else %}
+                {% empty %}
                     <div class="card">
                         <div class="card-header">
                             <h4 class="alert alert-danger">Lo sentimos!</h4>
                         </div>
                         <div class="card-body">
-                            Parece que no hay ninguna review escrita por ningún usuario en estos momentos.
+                            Parece que no hay ningún producto registrado en nuestro sistema en estos momentos.
                         </div>
                     </div>
-                {% endif %}
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
-
 
 {% endblock content %}

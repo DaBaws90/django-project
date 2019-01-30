@@ -71,9 +71,93 @@ class PlaceDetailsPage(DetailView):
     context_object_name = "place"
 
 class PlaceCreatePage(CreateView):
-    model = Order
+    model = Place
     template_name = "lugares/create.html"
     form_class = PlaceForm
 
     def get_success_url(self):
         return reverse_lazy('placesIndex') + "?created"
+
+class PlaceUpdatePage(UpdateView):
+    model = Place
+    template_name = "lugares/update.html"
+    form_class = PlaceForm
+
+    def get_success_url(self):
+        return self.request.path + '?updated'
+
+class PlaceDeletePage(DeleteView):
+    model = Place
+    context_object_name = "place"
+    template_name = "lugares/place_confirm_delete.html"
+
+    def get_success_url(self):
+        return reverse_lazy('placesIndex') + "?deleted"
+
+class ProductListPage(ListView):
+    model = Product
+    template_name = "productos/index.html"
+    queryset = Product.objects.all()
+
+class ProductDetailsPage(DetailView):
+    model = Product
+    template_name = "productos/details.html"
+    context_object_name = "product"
+
+class ProductCreatePage(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "productos/create.html"
+
+    def get_success_url(self):
+        return reverse('productsIndex') + '?created'
+
+class ProductUpdatePage(UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "productos/update.html"
+
+    def get_success_url(self):
+        return self.request.path + '?updated'
+
+class ProductDeletePage(DeleteView):
+    model = Product
+    template_name = "productos/product_confirm_delete.html"
+    context_object_name = "product"
+
+    def get_success_url(self):
+        return reverse('productsIndex') + '?deleted'
+
+class RestaurantListPage(ListView):
+    model = Restaurant
+    template_name = "restaurante/index.html"
+    queryset = Restaurant.objects.all()
+
+class RestaurantDetailsPage(DetailView):
+    model = Restaurant
+    template_name = "restaurante/details.html"
+    context_object_name = "restaurant"
+
+class RestaurantCreatePage(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "restaurante/create.html"
+
+    def get_success_url(self):
+        return reverse('restaurantsIndex') + '?created'
+
+class RestaurantUpdatePage(UpdateView):
+    model = Restaurant
+    form_class = RestaurantForm
+    template_name = "restaurante/update.html"
+
+    def get_success_url(self):
+        return self.request.path + '?updated'
+
+class RestaurantDeletePage(DeleteView):
+    model = Restaurant
+    template_name = "restaurante/restaurant_confirm_delete.html"
+    context_object_name = "restaurant"
+
+    def get_success_url(self):
+        return reverse('restaurantsIndex') + '?deleted'

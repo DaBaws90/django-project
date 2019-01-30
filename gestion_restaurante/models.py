@@ -1,7 +1,7 @@
 import sys
 from django.db import models
 from gestion_clientes.models import Review, Customer
-from django.core.validators import DecimalValidator, MinValueValidator
+from django.core.validators import DecimalValidator, MinValueValidator, MaxValueValidator
 import time
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -10,7 +10,8 @@ from django.dispatch import receiver
 
 class Place(models.Model):
     address = models.CharField(max_length = 40, verbose_name = "Dirección")
-    zipCode = models.IntegerField(verbose_name= "Código postal", null= True, blank= True)
+    zipCode = models.IntegerField(verbose_name= "Código postal", null= True, blank= True, 
+        validators=[MinValueValidator(0, message='El valor mínimo es de 1.'), MaxValueValidator(99999, message="No más de 5 cifras")])
     city = models.CharField(max_length = 30, verbose_name = "Ciudad")
     country = models.CharField(max_length = 30, verbose_name = "País")
 
@@ -29,7 +30,7 @@ class Place(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length = 30, verbose_name = "Producto")
-    description = models.TextField(max_length = 120, verbose_name = "Descripción")
+    description = models.TextField(max_length = 120, verbose_name = "Descripción", null= True, blank= True)
     created = models.DateTimeField(auto_now_add= True, verbose_name= "Fabricado el")
     updated = models.DateTimeField(auto_now= True, verbose_name= "Modificado el")
 
@@ -66,6 +67,7 @@ def pre_save_ref(sender, **kwargs):
     if not kwargs['instance'].order_ref:
         ref = int(round(time.time() * 1000))
         kwargs['instance'].order_ref = ref
+
 
 class Restaurant(models.Model):
     name = models.CharField(max_length = 35, verbose_name = "Nombre")

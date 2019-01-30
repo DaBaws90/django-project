@@ -28,7 +28,7 @@
 <body>
     {% block navbar %}
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<a class="navbar-brand" href="#">Gestor de clientes</a>
+			<a class="navbar-brand" href={% url 'homeRestaurant' %}>DaBaws' Restaurant</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse"
 				data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
 				aria-expanded="false" aria-label="Toggle navigation">
@@ -55,6 +55,36 @@
                             <a class="dropdown-item" href={% url 'customersIndex' %}>Listado</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href={% url 'customersCreate' %}>Añadir</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Products
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href={% url 'productsIndex' %}>Listado</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href={% url 'productCreate' %}>Añadir</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Orders
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href={% url 'ordersIndex' %}>Listado</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href={% url 'orderCreate' %}>Añadir</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Places
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href={% url 'placesIndex' %}>Listado</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href={% url 'placeCreate' %}>Añadir</a>
                         </div>
                     </li>
                     {% comment %} <a class="nav-item nav-link" href="{% url 'customersIndex' %}">Clientes</a>

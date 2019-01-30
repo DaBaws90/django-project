@@ -42,9 +42,7 @@ def create_user(request):
             customer_form = CustomerForm(request.POST, request.FILES, instance=user.customer)
             customer_form.full_clean()
             customer_form.save()
-            return redirect(reverse('home') + '?created')
-        # else:
-        #     messages.error(request, _('Please correct the error below.'))
+            return redirect(reverse('customersIndex') + '?created')
     else:
         user_form = UserForm()
         customer_form = CustomerForm()
@@ -65,9 +63,7 @@ def update_user2(request, pk):
             # customer_form = CustomerForm(customer_form.cleaned_data, request.FILES, instance=user.customer)
             # customer_form.full_clean()
             customer_form.save()
-            return redirect(reverse('home') + '?updated')
-        # else:
-        #     messages.error(request, _('Please correct the error below.'))
+            return redirect(reverse('customersIndex') + '?updated')
     else:
         user_form = UserUpdateForm(instance=user)
         customer_form = CustomerForm(instance=user.customer)

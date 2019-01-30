@@ -35,10 +35,10 @@
                         </div>
                         {% comment %} {% if request.is_Authenticated %} {% endcomment %}
                             <div class="card-body">
-                                {% comment %} <a href="{% url 'orderDetails' o.id %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a> {% endcomment %}
+                                <a href="{% url 'placeDetails' p.id %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
                                 {% comment %} {% if request.user.is_staff %} {% endcomment %}
-                                    {% comment %} <a href="{% url 'orderDelete' o.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a> {% endcomment %}
-                                    {% comment %} <a href="{% url 'orderUpdate' o.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a> {% endcomment %}
+                                    <a href="{% url 'placeDelete' p.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
+                                    <a href="{% url 'placeUpdate' p.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
                                 {% comment %} {% endif %} {% endcomment %}
                             </div>
                         {% comment %} {% endif %} {% endcomment %}

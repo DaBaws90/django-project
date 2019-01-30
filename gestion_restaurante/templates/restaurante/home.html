@@ -28,7 +28,9 @@
                             {% comment %} <a href="{% url 'customerDetails' request.user.customer.id %}">Perfil</a> {% endcomment %}
                         {% comment %} {% endif %}
                     {% endif %} {% endcomment %}
-                    <a href="{% url 'reviewsIndex' %}">Opiniones</a>
+                    <a href="{% url 'productsIndex' %}">Productos</a>
+                    <a href="{% url 'placesIndex' %}">Lugares</a>
+                    
                     <a href=" {% url 'contact' %} ">Contacto</a>
                 </div>
             </div>
