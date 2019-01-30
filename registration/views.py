@@ -7,6 +7,7 @@ from django.views.generic import TemplateView, ListView, DetailView, CreateView,
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 class SignIn(LoginView):
@@ -35,6 +36,7 @@ def signup(request):
 })
 
 @transaction.atomic
+@login_required(login_url="/accounts/login/?updated")
 def profile_update(request):
     if request.user.is_staff:
         return redirect('/admin/')
