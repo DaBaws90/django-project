@@ -1,15 +1,12 @@
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, HttpResponseRedirect
-# from gestion_clientes.models import Customer, Review
 from .models import Order, Product, Place, Restaurant
 from .forms import OrderForm, ProductForm, PlaceForm, RestaurantForm
-# from .forms import ContactUsForm
-# from gestion_clientes.forms import CustomerForm, UserForm, ReviewForm, UserUpdateForm
 from django.db import transaction
 from django.urls import reverse, reverse_lazy
-# from django.core.mail import send_mail
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.contrib.auth.models import User
-# from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
@@ -26,7 +23,7 @@ class OrderDetailsPage(DetailView):
     template_name = "pedidos/details.html"
     context_object_name = "order"
 
-class OrderCreatePage(CreateView):
+class OrderCreatePage(LoginRequiredMixin, CreateView):
     model = Order
     template_name = "pedidos/create.html"
     form_class = OrderForm
@@ -161,3 +158,6 @@ class RestaurantDeletePage(DeleteView):
 
     def get_success_url(self):
         return reverse('restaurantsIndex') + '?deleted'
+
+class About(TemplateView):
+    template_name = "about/aboutUs.html"

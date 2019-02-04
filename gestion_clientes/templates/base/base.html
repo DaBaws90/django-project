@@ -19,9 +19,12 @@
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     {% comment %} Base CCS {% endcomment %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'base/css/base.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'about/css/about.css' %}">
     {% block css %}{% endblock css %}
 </head>
 
@@ -97,9 +100,7 @@
                             <a class="dropdown-item" href={% url 'restaurantCreate' %}>Añadir</a>
                         </div>
                     </li>
-                    {% comment %} <a class="nav-item nav-link" href="{% url 'customersIndex' %}">Clientes</a>
-                    <a class="nav-item nav-link" href="{% url 'customersCreate' %}">Crear</a>
-                    <a class="nav-item nav-link" href="{% url 'reviewsIndex' %}">Opiniones</a> {% endcomment %}
+                    <li class="nav-item"><a class="nav-link" href={% url 'about' %}>About Us</a></li>
 				</div>
 			</div>
             {% if request.user.is_authenticated %}
@@ -109,6 +110,10 @@
                     Hello, {{request.user}}!
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        {% if not request.user.is_staff %}
+                            <a class="dropdown-item" href={% url 'profile' %}>Perfil</a>
+                        <div class="dropdown-divider"></div>
+                        {% endif %}
                         <a class="dropdown-item" href={% url 'logout' %}>Logout</a>
                     </div>
                 </li>
@@ -135,17 +140,38 @@
 
     {% block footer %}
     <footer class="mt-4">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <div class="text-center">
-                    <p class="text-muted">Footer template</p>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <div class="text-center">
+                        <p class="text-muted">Footer template</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <a id="back2Top" title="Back to top" href="#">&#10148;</a>
     </footer>
     {% endblock footer %}
+<script>
+/*Scroll to top when arrow up clicked BEGIN*/
+$(window).scroll(function() {
+    var height = $(window).scrollTop();
+    if (height > 100) {
+        $('#back2Top').fadeIn();
+    } else {
+        $('#back2Top').fadeOut();
+    }
+});
+$(document).ready(function() {
+    $("#back2Top").click(function(event) {
+        event.preventDefault();
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+        return false;
+    });
+
+});
+/*Scroll to top when arrow up clicked END*/
+</script>
 </body>
 
 </html>

@@ -8,6 +8,11 @@ from django.core.mail import send_mail
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 
 # Create your views here.
 
@@ -27,11 +32,24 @@ class CustomerDetailsPage(DetailView):
 class CustomerDeletePage(DeleteView):
     model = User
     context_object_name = "user"
+
+    # @method_decorator(login_required())
+    # @user_passes_test(lambda u: u.is_superuser)
+    # self es la clase, request es la "ruta", args está vacío y kwargs contiene la PK del customer
+    def get(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            User.objects.get(id = kwargs['pk']).delete()
+            return HttpResponseRedirect(reverse_lazy('customersIndex') + "?deleted")
+            # print("SELF: "+str(self)+", REQUEST: "+str(request)+", ARGS: "+str(args)+", KWARGS: "+str(kwargs))
+        else:
+            return HttpResponseRedirect(reverse_lazy('customersIndex') + "?unable")
+            # print("LUL")
     
     def get_success_url(self):
         return reverse_lazy('customersIndex') + "?deleted"
 
 @transaction.atomic
+@staff_member_required
 def create_user(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
@@ -50,6 +68,7 @@ def create_user(request):
 })
 
 @transaction.atomic
+@staff_member_required
 def update_user2(request, pk):
     user = User.objects.get(id = pk)
     if request.method == 'POST':
@@ -71,7 +90,6 @@ def update_user2(request, pk):
     return render(request, 'clientes/update.html', {'customer_form': customer_form, 'user_form':user_form})
 
 
-
 class ReviewsListPage(ListView):
     model  = Review
     template_name = "reviews/index.html"
@@ -83,7 +101,7 @@ class ReviewDetailsPage(DetailView):
     template_name = "reviews/details.html"
     context_object_name = "review"
 
-class ReviewsCreatePage(CreateView):
+class ReviewsCreatePage(LoginRequiredMixin, CreateView):
     model = Review
     template_name = "reviews/create.html"
     form_class = ReviewForm
@@ -99,7 +117,7 @@ class ReviewsCreatePage(CreateView):
 
         return render(request, "reviews/update.html", {'form':form})
 
-class ReviewUpdatePage(UpdateView):
+class ReviewUpdatePage(LoginRequiredMixin, UpdateView):
     model = Review
     template_name = "reviews/update.html"
     form_class = ReviewForm
@@ -108,7 +126,7 @@ class ReviewUpdatePage(UpdateView):
         return self.request.path + "?updated"
 
 
-class ReviewDeletePage(DeleteView):
+class ReviewDeletePage(LoginRequiredMixin, DeleteView):
     model = Review
     context_object_name = "review"
     template_name = "reviews/review_confirm_delete.html"

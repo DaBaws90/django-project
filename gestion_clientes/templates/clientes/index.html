@@ -35,6 +35,13 @@
                     </button>
                 </div>
                 {% endif %}
+                {% if 'unable' in request.GET %}
+                <div class="alert alert-danger alert-dismissible fade show">No se pudo llevar a cabo la acción solicitada
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif %}
                 {% if object_list %}
                     {% for c in object_list %}
                     <div class="card mb-2 ">

@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from .views import (
     HomeRestaurantPage, OrdersListPage, OrderDetailsPage, OrderCreatePage, OrderUpdatePage, OrderDeletaPage,
-    PlaceListPage, PlaceDetailsPage, PlaceCreatePage, PlaceUpdatePage, PlaceDeletePage,
+    PlaceListPage, PlaceDetailsPage, PlaceCreatePage, PlaceUpdatePage, PlaceDeletePage, About,
     ProductListPage, ProductDetailsPage, ProductCreatePage, ProductUpdatePage, ProductDeletePage,
     RestaurantListPage, RestaurantDetailsPage, RestaurantCreatePage, RestaurantUpdatePage, RestaurantDeletePage
 )
@@ -30,4 +30,6 @@ urlpatterns = [
     path('restaurantes/create/', RestaurantCreatePage.as_view(), name = "restaurantCreate"),
     path('restaurantes/update/<int:pk>/', RestaurantUpdatePage.as_view(), name = "restaurantUpdate"),
     path('restaurantes/delete/<int:pk>/', RestaurantDeletePage.as_view(), name = "restaurantDelete"),
+    path('about/', About.as_view(), name = "about"),
 ]
+# urlpatterns += place_crud.get_url_patterns()
