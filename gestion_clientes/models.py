@@ -31,6 +31,7 @@ class Customer(models.Model):
     image = models.ImageField(null = True, blank = True, verbose_name= "Foto", upload_to = "images/")
     registered = models.DateTimeField(auto_now_add = True, verbose_name= "Fecha de registro")
     updated = models.DateTimeField(auto_now= True, verbose_name = "Fecha de edición")
+    products = models.ManyToManyField("gestion_restaurante.Product", verbose_name="Productos", through="gestion_restaurante.Order")
     slug = models.SlugField()
 
     @property

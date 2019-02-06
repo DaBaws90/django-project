@@ -194,4 +194,39 @@ class OrderForm(forms.ModelForm):
     #     print("SAVING CUSTOMER")
     #     obj.save()
 
+class OrderAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = Order
+        fields = '__all__'
+        # exclude = ['customer',]
+
+        widgets = {
+            'comment': forms.Textarea(
+                attrs={'cols': 60, 'rows': 6, 'class': 'from-group', 'placeholder': 'Escriba aquí su comentario', 'required':True}
+            ),
+        }
+        help_texts = {
+            'comment': ('¿Algo que desee comentarnos acerca del pedido?'),
+            'product': ('Indique el producto que contiene el pedido'),
+            'weigth': ('Indique la cantidad deseada (Kgs). Debe indicar alguna de las dos cantidades'),
+            'stock': ("Indique la cantidad deseada (Unidades). Debe indicar alguna de las dos cantidades"),
+
+        }
+        error_messages = {
+            'comment': {
+                'max_length': ("Parece que se ha extendido demasiado y ha rebasado la longitud máxima")
+            }
+        }
+
+    product = forms.ModelChoiceField(label = "Producto", queryset = Product.objects.all(), empty_label= "Seleccione un producto")
+
+    customer = forms.ModelChoiceField(label = "Cliente", queryset = Customer.objects.all(), empty_label= "Seleccione un cliente")
+
+    def clean_comment(self):
+        if len(self.cleaned_data['comment']) > 150:
+            raise forms.ValidationError("El campo no puede exceder los 150 carácteres de longitud")
+        else:
+            return self.cleaned_data['comment']
+
 

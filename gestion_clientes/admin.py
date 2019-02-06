@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Customer, Review
 from django import forms
-from .forms import CustomerForm, ReviewForm
+from .forms import CustomerForm, ReviewForm, ReviewAdminForm
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from gestion_restaurante.admin import OrderInline
 from django.contrib.auth.models import User
@@ -59,7 +59,7 @@ class CustomerAdmin(admin.ModelAdmin):
     # prepopulated_fields = {"slug": ('name', 'middlename', 'lastname')}
 
 class ReviewAdmin(admin.ModelAdmin):
-    form = ReviewForm
+    form = ReviewAdminForm
     fields = [('title', 'valoration', 'author'), 'content']
     actions_on_bottom = True
     actions_on_top = False

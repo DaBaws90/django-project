@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Restaurant, Order, Place, Product
 from django import forms
-from .forms import OrderForm, PlaceForm, ProductForm, RestaurantForm
+from .forms import OrderForm, PlaceForm, ProductForm, RestaurantForm, OrderAdminForm
 
 # Register your models here.
 
@@ -37,7 +37,7 @@ class OrderInline(admin.TabularInline):
     verbose_name_plural = "Pedido"
 
 class OrderAdmin(admin.ModelAdmin):
-    form = OrderForm
+    form = OrderAdminForm
     actions_on_bottom = True
     actions_on_top = False
     list_per_page = 5
