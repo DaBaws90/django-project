@@ -11,27 +11,33 @@
 {% endblock navbar %}
 
 {% block content %}
-<div class="container mt-5 flex-container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="text-center">
-                <h1>Welcome to our restaurant website!<h1>
-                <small class="text-muted">
-                    Feel free to navigate and discover more about us. Let's get started!
-                </small>
-                <div class="listLinks mt-3">
-                    <a href="{% url 'home' %}">Clientes</a>
-                    {% comment %} {% if request.is_authenticated %}
-                        {% if not request.user.is_staff %} {% endcomment %}
+<div class="flex-container">
+    <div class="listLinks mt-3 mr-5">
+        {% if request.user.is_authenticated %}
+            <a class="float-right corner ml-4" href={% url 'logout' %}>Logout</a>
+        {% else %}
+            <a class="float-right corner ml-4" href="{% url 'register' %}">Sign up</a>
+            <a class="float-right corner" href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </div>
+    <div class="container mt-5 flex-container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="text-center">
+                    <h1>Welcome to our restaurant website!<h1>
+                    <small class="text-muted">
+                        Feel free to navigate and discover more about us. Let's get started!
+                    </small>
+                    <div class="listLinks mt-3">
+                        <a href="{% url 'home' %}">Clientes</a>
+                        {% comment %} {% if request.user.is_authenticated %} {% endcomment %}
                             <a href="{% url 'ordersIndex' %}">Pedidos</a>
-                        {% comment %} {% else %} {% endcomment %}
-                            {% comment %} <a href="{% url 'customerDetails' request.user.customer.id %}">Perfil</a> {% endcomment %}
-                        {% comment %} {% endif %}
-                    {% endif %} {% endcomment %}
-                    <a href="{% url 'productsIndex' %}">Productos</a>
-                    <a href="{% url 'placesIndex' %}">Lugares</a>
-                    <a href="{% url 'restaurantsIndex' %}">Restaurantes</a>
-                    <a href=" {% url 'contact' %} ">Contacto</a>
+                        {% comment %} {% endif %} {% endcomment %}
+                        <a href="{% url 'productsIndex' %}">Productos</a>
+                        <a href="{% url 'placesIndex' %}">Lugares</a>
+                        <a href="{% url 'restaurantsIndex' %}">Restaurantes</a>
+                        <a href=" {% url 'contact' %} ">Contacto</a>
+                    </div>
                 </div>
             </div>
         </div>

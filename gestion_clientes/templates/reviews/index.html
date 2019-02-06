@@ -34,15 +34,25 @@
                         <div class="card-header">
                             <h5 class="mt-2">{{ r.title }}</h5>
                         </div>
-                        {% comment %} {% if request.is_Authenticated %} {% endcomment %}
-                            <div class="card-body">
-                                <a href="{% url 'reviewDetails' r.id %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
-                                {% comment %} {% if request.user.is_staff %} {% endcomment %}
+                        <div class="card-body">
+                            {% if request.user.is_authenticated %}
+                                {% if request.user.is_staff %}
+                                    <a href="{% url 'reviewDetails' r.id %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
                                     <a onclick="return confirm('¿Eliminar opinión?')" href="{% url 'reviewsDelete' r.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
                                     <a href="{% url 'reviewUpdate' r.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
-                                {% comment %} {% endif %} {% endcomment %}
-                            </div>
-                        {% comment %} {% endif %} {% endcomment %}
+                                {% else %}
+                                    {% if request.user.customer == r.author %}
+                                        <a href="{% url 'reviewDetails' r.id %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
+                                        <a onclick="return confirm('¿Eliminar opinión?')" href="{% url 'reviewsDelete' r.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
+                                        <a href="{% url 'reviewUpdate' r.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
+                                    {% else %}
+                                        <a href="{% url 'reviewDetails' r.id %}" class="btn btn-outline-success btn-sm"><i class="fas fa-search"></i> Ver detalles</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% else %}
+                                <a href="{% url 'reviewDetails' r.id %}" class="btn btn-outline-success btn-sm"><i class="fas fa-search"></i> Ver detalles</a>
+                            {% endif %}
+                        </div>
                     </div>
                     {% endfor %}
                     

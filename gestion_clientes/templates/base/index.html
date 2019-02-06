@@ -11,30 +11,45 @@
 {% endblock navbar %}
 
 {% block content %}
-<div class="container mt-5 flex-container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="text-center">
-                {% comment %} <h1 class="text-muted">Welcome to the clients management system!<h1> {% endcomment %}
-                <h1>Welcome to the clients management system!<h1>
-                <small class="text-muted">
-                    Here you can manage registries. Let's get started!
-                </small>
-                <div class="listLinks mt-3 mb-5">
-                    <a href="{% url 'homeRestaurant' %}">Restaurante</a>
-                    {% comment %} {% if request.is_authenticated %}
-                        {% if not request.user.is_staff %} {% endcomment %}
-                            <a href="{% url 'customersIndex' %}">Clientes</a>
-                        {% comment %} {% else %} {% endcomment %}
-                            {% comment %} <a href="{% url 'customerDetails' request.user.customer.id %}">Perfil</a> {% endcomment %}
-                        {% comment %} {% endif %}
-                    {% endif %} {% endcomment %}
-                    <a href="{% url 'reviewsIndex' %}">Opiniones</a>
-                    <a href=" {% url 'contact' %} ">Contacto</a>
+<div class="flex-container">
+    <div class="listLinks mt-3 mr-5">
+        {% if request.user.is_authenticated %}
+            <a class="float-right corner ml-4" href={% url 'logout' %}>Logout</a>
+        {% else %}
+            <a class="float-right corner ml-4" href="{% url 'register' %}">Sign up</a>
+            <a class="float-right corner" href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </div>
+    <div class="container mt-5 flex-container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="text-center">
+                    {% if 'unable' in request.GET %}
+                    <div class="alert alert-danger alert-dismissible fade show">No dispone de permisos suficientes para llevar a cabo la acción
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% endif %}
+                    <h1>Welcome to clients management system!<h1>
+                    <small class="text-muted">
+                        Here you can manage registries. Let's get started!
+                    </small>
+                    <div class="listLinks mt-3 mb-5">
+                        <a href="{% url 'homeRestaurant' %}">Restaurante</a>
+                        {% if request.user.is_authenticated %}
+                            {% if request.user.is_staff %}
+                                <a href="{% url 'customersIndex' %}">Clientes</a>
+                            {% endif %}
+                        {% endif %}
+                        <a href="{% url 'reviewsIndex' %}">Opiniones</a>
+                        <a href="{% url 'contact' %}">Contacto</a>
+                        <a href="{% url 'about' %}">About Us</a>
+                    </div>
+                    {% if 'signup' in request.GET %}
+                        <small style="font-size: 0.4em;">Su cuenta se ha creado satisfactoriamente. <br/>Ya puede <a href={% url 'login' %}>iniciar sesión</a>.</small>
+                    {% endif %}
                 </div>
-                {% if 'signup' in request.GET %}
-                    <small style="font-size: 0.4em;">Su cuenta se ha creado satisfactoriamente. <br/>Ya puede <a href={% url 'login' %}>iniciar sesión</a>.</small>
-                {% endif %}
             </div>
         </div>
     </div>

@@ -19,31 +19,43 @@ from django.contrib.auth.decorators import user_passes_test
 class HomePage(TemplateView):
     template_name = "base/index.html"
 
-class CustomerListPage(ListView):
+class CustomerListPage(LoginRequiredMixin, ListView):
     model  = Customer
     template_name = "clientes/index.html"
     queryset = Customer.objects.order_by("id")
 
-class CustomerDetailsPage(DetailView):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_superuser or request.user.has_perm('gestion_clientes.view_customer'):
+            customers = Customer.objects.order_by('id')
+            return render(request, 'clientes/index.html', {'object_list': customers})
+        else:
+            return HttpResponseRedirect(reverse_lazy('home') + "?unable")
+    
+class CustomerDetailsPage(LoginRequiredMixin, DetailView):
     model = Customer
     template_name = "clientes/details.html"
     context_object_name = "customer"
 
-class CustomerDeletePage(DeleteView):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_superuser or request.user.has_perm('gestion_clientes.view_customer'):
+            customer = Customer.objects.get(id = kwargs['pk'])
+            return render(request, 'clientes/details.html', {'customer': customer})
+        else:
+            return HttpResponseRedirect(reverse_lazy('home') + "?unable")
+
+class CustomerDeletePage(LoginRequiredMixin, DeleteView):
     model = User
     context_object_name = "user"
 
-    # @method_decorator(login_required())
     # @user_passes_test(lambda u: u.is_superuser)
-    # self es la clase, request es la "ruta", args está vacío y kwargs contiene la PK del customer
+    # self es la clase, request es la "ruta", args está vacío y kwargs contiene la PK del user vinculado al customer
     def get(self, request, *args, **kwargs):
-        if request.user.is_superuser:
-            User.objects.get(id = kwargs['pk']).delete()
-            return HttpResponseRedirect(reverse_lazy('customersIndex') + "?deleted")
-            # print("SELF: "+str(self)+", REQUEST: "+str(request)+", ARGS: "+str(args)+", KWARGS: "+str(kwargs))
+        if request.user.is_superuser or request.user.has_perm('gestion_clientes.delete_customer'):
+            user = User.objects.get(id = kwargs['pk'])
+            # return HttpResponseRedirect(self.get_success_url())
+            return render(request, 'auth/user_confirm_delete.html', {'object': user})
         else:
-            return HttpResponseRedirect(reverse_lazy('customersIndex') + "?unable")
-            # print("LUL")
+            return HttpResponseRedirect(reverse_lazy('home') + "?unable")
     
     def get_success_url(self):
         return reverse_lazy('customersIndex') + "?deleted"

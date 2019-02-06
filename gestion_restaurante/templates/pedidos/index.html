@@ -28,32 +28,55 @@
                     </button>
                 </div>
                 {% endif %}
-                {% for o in object_list %}
-                    <div class="card mb-2 ">
-                        <div class="card-header">
-                            <h5 class="mt-2">Pedido # {{ o.order_ref }}</h5>
-                        </div>
-                        {% comment %} {% if request.is_Authenticated %} {% endcomment %}
-                            <div class="card-body">
-                                <a href="{% url 'orderDetails' o.id %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
-                                {% comment %} {% if request.user.is_staff %} {% endcomment %}
+                {% if request.user.is_authenticated %}
+                    {% if request.user.is_staff %}
+                        {% for o in object_list %}
+                            <div class="card mb-2 ">
+                                <div class="card-header">
+                                    <h5 class="mt-2">Pedido # {{ o.order_ref }}</h5>
+                                </div>
+                                <div class="card-body">
+                                    <a href="{% url 'orderDetails' o.id %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
                                     <a href="{% url 'orderDelete' o.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
                                     <a href="{% url 'orderUpdate' o.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
-                                {% comment %} {% endif %} {% endcomment %}
+                                </div>
                             </div>
-                        {% comment %} {% endif %} {% endcomment %}
-                    </div>
-                    
-                {% empty %}
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="alert alert-danger">Lo sentimos!</h4>
-                        </div>
-                        <div class="card-body">
-                            Parece que no hay ningún pedido registrado en nuestro sistema.
-                        </div>
-                    </div>
-                {% endfor %}
+                        {% empty %}
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="alert alert-danger">Lo sentimos!</h4>
+                                </div>
+                                <div class="card-body">
+                                    Parece que no hay ningún pedido registrado en nuestro sistema.
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {% for o in object_list %}
+                            {% if request.user.customer == o.customer %}
+                                <div class="card mb-2 ">
+                                    <div class="card-header">
+                                        <h5 class="mt-2">Pedido # {{ o.order_ref }}</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <a href="{% url 'orderDetails' o.id %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
+                                        <a href="{% url 'orderDelete' o.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
+                                        <a href="{% url 'orderUpdate' o.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% empty %}
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="alert alert-danger">Lo sentimos!</h4>
+                                </div>
+                                <div class="card-body">
+                                    Parece que no hay ningún pedido registrado en nuestro sistema.
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
     </div>

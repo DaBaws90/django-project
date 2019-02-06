@@ -35,28 +35,21 @@
                     </button>
                 </div>
                 {% endif %}
-                {% if 'unable' in request.GET %}
-                <div class="alert alert-danger alert-dismissible fade show">No se pudo llevar a cabo la acción solicitada
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                {% endif %}
                 {% if object_list %}
                     {% for c in object_list %}
                     <div class="card mb-2 ">
                         <div class="card-header">
                             <h5 class="mt-2">{{ c.fullname }}</h5>
                         </div>
-                        {% comment %} {% if request.is_Authenticated %} {% endcomment %}
+                        {% if request.user.is_authenticated %}
+                            {% if request.user.is_staff %}
                             <div class="card-body">
                                 <a href="{% url 'customerDetails' c.id c.slug %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
-                                {% comment %} {% if request.user.is_staff %} {% endcomment %}
-                                    <a onclick="return confirm('¿Eliminar usuario?')" href="{% url 'customersDelete' c.user.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
-                                    <a href="{% url 'customersUpdate' c.user.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
-                                {% comment %} {% endif %} {% endcomment %}
+                                <a onclick="return confirm('¿Eliminar usuario?')" href="{% url 'customersDelete' c.user.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
+                                <a href="{% url 'customersUpdate' c.user.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
                             </div>
-                        {% comment %} {% endif %} {% endcomment %}
+                            {% endif %}
+                        {% endif %}
                     </div>
                     {% endfor %}
                     
