@@ -178,21 +178,12 @@ class OrderForm(forms.ModelForm):
             obj.customer = request.user.customer
         obj.save()
 
-    # def save(self, commit=True ,*args, **kwargs):
-    #     request = None
-    #     if 'request' in kwargs:
-    #         request = kwargs.pop('request')
-    #     obj = super().save(commit=False, *args, **kwargs)
-    #     if obj.customer is None and request is not None:
-    #         print("CUSTOMER NONE: "+str(request.user.customer))
     #         temp = Customer.objects.filter(user = request.user)
     #         if temp.count() > 0:
     #             print("CUTOMER INSTANCE FOUND")
     #             obj.customer = temp
     #         else:
     #             obj.customer = None
-    #     print("SAVING CUSTOMER")
-    #     obj.save()
 
 class OrderAdminForm(forms.ModelForm):
 

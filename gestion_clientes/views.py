@@ -61,45 +61,52 @@ class CustomerDeletePage(LoginRequiredMixin, DeleteView):
         return reverse_lazy('customersIndex') + "?deleted"
 
 @transaction.atomic
-@staff_member_required
+@login_required
+# @user_passes_test(lambda u: u.is_superuser)
 def create_user(request):
-    if request.method == 'POST':
-        user_form = UserForm(request.POST)
-        customer_form = CustomerForm(request.POST, request.FILES)
-        if user_form.is_valid() and customer_form.is_valid():
-            user = user_form.save()
-            user.refresh_from_db()
-            customer_form = CustomerForm(request.POST, request.FILES, instance=user.customer)
-            customer_form.full_clean()
-            customer_form.save()
-            return redirect(reverse('customersIndex') + '?created')
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            user_form = UserForm(request.POST)
+            customer_form = CustomerForm(request.POST, request.FILES)
+            if user_form.is_valid() and customer_form.is_valid():
+                user = user_form.save()
+                user.refresh_from_db()
+                customer_form = CustomerForm(request.POST, request.FILES, instance=user.customer)
+                customer_form.full_clean()
+                customer_form.save()
+                return redirect(reverse('customersIndex') + '?created')
+        else:
+            user_form = UserForm()
+            customer_form = CustomerForm()
+        return render(request, 'clientes/create.html', {'user_form': user_form, 'customer_form': customer_form})
     else:
-        user_form = UserForm()
-        customer_form = CustomerForm()
-    return render(request, 'clientes/create.html', {'user_form': user_form, 'customer_form': customer_form
-})
+        return redirect(reverse_lazy('home') + '?unable')
 
 @transaction.atomic
-@staff_member_required
+@login_required
+# @user_passes_test(lambda u: u.is_superuser)
 def update_user2(request, pk):
-    user = User.objects.get(id = pk)
-    if request.method == 'POST':
+    if request.user.is_superuser:
+        user = User.objects.get(id = pk)
+        if request.method == 'POST':
 
-        customer_form = CustomerForm(request.POST, request.FILES, instance=user.customer)
-        user_form = UserUpdateForm(request.POST, instance=user)
+            customer_form = CustomerForm(request.POST, request.FILES, instance=user.customer)
+            user_form = UserUpdateForm(request.POST, instance=user)
 
-        if customer_form.is_valid() and user_form.is_valid():
-            user = user_form.save() 
-            user.refresh_from_db()
-            # customer_form = CustomerForm(customer_form.cleaned_data, request.FILES, instance=user.customer)
-            # customer_form.full_clean()
-            customer_form.save()
-            return redirect(reverse('customersIndex') + '?updated')
+            if customer_form.is_valid() and user_form.is_valid():
+                user = user_form.save() 
+                user.refresh_from_db()
+                # customer_form = CustomerForm(customer_form.cleaned_data, request.FILES, instance=user.customer)
+                # customer_form.full_clean()
+                customer_form.save()
+                return redirect(reverse('customersIndex') + '?updated')
+        else:
+            user_form = UserUpdateForm(instance=user)
+            customer_form = CustomerForm(instance=user.customer)
+            
+        return render(request, 'clientes/update.html', {'customer_form': customer_form, 'user_form':user_form})
     else:
-        user_form = UserUpdateForm(instance=user)
-        customer_form = CustomerForm(instance=user.customer)
-        
-    return render(request, 'clientes/update.html', {'customer_form': customer_form, 'user_form':user_form})
+        return redirect(reverse_lazy('home') + '?unable')
 
 
 class ReviewsListPage(ListView):
