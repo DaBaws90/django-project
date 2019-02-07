@@ -14,7 +14,7 @@
 <div class="flex-container">
     <div class="listLinks mt-3 mr-5">
         {% if request.user.is_authenticated %}
-            <a class="float-right corner ml-4" href={% url 'logout' %}>Logout</a>
+            <a onclick="byeFunction()" class="float-right corner ml-4" href={% url 'logout' %}>Logout</a>
         {% else %}
             <a class="float-right corner ml-4" href="{% url 'register' %}">Sign up</a>
             <a class="float-right corner" href="{% url 'login' %}">Login</a>

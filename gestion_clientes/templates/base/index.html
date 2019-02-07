@@ -14,7 +14,7 @@
 <div class="flex-container">
     <div class="listLinks mt-3 mr-5">
         {% if request.user.is_authenticated %}
-            <a class="float-right corner ml-4" href={% url 'logout' %}>Logout</a>
+            <a onclick="byeFunction()" class="float-right corner ml-4" href={% url 'logout' %}>Logout</a>
         {% else %}
             <a class="float-right corner ml-4" href="{% url 'register' %}">Sign up</a>
             <a class="float-right corner" href="{% url 'login' %}">Login</a>
@@ -46,6 +46,18 @@
                         <a href="{% url 'contact' %}">Contacto</a>
                         <a href="{% url 'about' %}">About Us</a>
                     </div>
+                    {% if request.user.is_authenticated %}
+                        {% if not request.user.is_staff %}
+                            <div class="text-center">
+                                <h4>Enhorabuena!</h4>
+                                <small style="font-size: 0.3em">Desde DaBaws' Restaurant queremos premiar su fidelidad, por eso hemos decidido hacerle este maraviloso regalo.
+                                    La cena incluye: menú para dos con entrantes (2 platos para compartir), principal, botella de vino y postre.
+                                    </br>Reclame su premio ya mismo si así lo desea.</br>
+                                </small>
+                                <small id="prize"></small>
+                            </div>
+                        {% endif %}
+                    {% endif %}
                     {% if 'signup' in request.GET %}
                         <small style="font-size: 0.4em;">Su cuenta se ha creado satisfactoriamente. <br/>Ya puede <a href={% url 'login' %}>iniciar sesión</a>.</small>
                     {% endif %}

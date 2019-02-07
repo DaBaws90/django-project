@@ -148,6 +148,10 @@ class ReviewAdminForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = '__all__'
+        verbose_name = 'Opinión'
+        verbose_name_plural = 'Opiniones'
+        ordering = ('valoration', 'author', 'title')
+        autocomplete_fields = ['author',]
         widgets = {
             'title': forms.TextInput(
                 attrs= {'class': 'form-group'}

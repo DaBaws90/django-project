@@ -13,6 +13,10 @@ class ReviewInline(admin.TabularInline):
     model = Review
     extra = 1
     can_delete = False
+    verbose_name = 'Opinión'
+    verbose_name_plural = 'Opiniones'
+    ordering = ('valoration', 'author', 'title')
+    autocomplete_fields = ['author',]
 
 # Creamos una opción para el menú desplegables del panel de administración, en el que está la opcón de eliminar los
 #  registros seleccionados
