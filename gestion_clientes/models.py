@@ -34,6 +34,8 @@ class Customer(models.Model):
     products = models.ManyToManyField("gestion_restaurante.Product", verbose_name="Productos", through="gestion_restaurante.Order")
     slug = models.SlugField()
 
+    # No funciona bien por culpa del valor de datos del campo DateField, pero al haer las pruebas en Python, al pasarle
+    # un valor de tipo dattime.date, funcionaba y retornaba la edad. Necesito investigar, si me da tiempo
     @property
     def edad(self):
         if self.birthday is not None:
