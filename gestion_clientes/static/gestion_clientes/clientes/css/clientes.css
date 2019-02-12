@@ -1,0 +1,31 @@
+html, body{
+    background: rgb(241,229,234);
+    background: linear-gradient(90deg, rgba(241,229,234,1) 0%, rgba(196,223,228,0.944397742006959) 100%); 
+}
+.flex-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 88vh;
+    /* align-content: center; */
+    /* align-items: center; */
+}
+small{
+    font-size: 0.45em;
+}
+.listLinks a{
+    font-size: 0.5em;
+    color: gray;
+}
+.listLinks a:hover{
+    color: orange;
+    text-decoration-line: none;
+}
+a.corner{
+    font-size: 1.0em;
+    color: gray;
+}
+a.corner:hover{
+    color: orange;
+    text-decoration-line: none;
+}
