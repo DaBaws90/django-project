@@ -9,5 +9,5 @@ urlpatterns = [
     # path('signin/', SignIn.as_view(), name = "login"),
     path('signin/', SignIn.as_view(), name = "login"),
     path('profile/', views.profile_update, name = "profile"),
-    path('logout/', include('django.contrib.auth.urls')),
+    # path('logout/', include('django.contrib.auth.urls')),
 ]
