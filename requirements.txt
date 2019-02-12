@@ -1,0 +1,6 @@
+pillow
+django
+django-debug-toolbar
+django-reversion
+django-widget-tweaks
+easy-thumbnails
