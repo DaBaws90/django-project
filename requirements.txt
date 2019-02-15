@@ -1,6 +1,6 @@
-pillow
-django
-django-debug-toolbar
-django-reversion
-django-widget-tweaks
-easy-thumbnails
+pillow==5.3.0
+django==2.0.2
+django-debug-toolbar==1.10.1
+django-reversion==3.0.0
+django-widget-tweaks==1.4.3
+easy-thumbnails==2.5
