@@ -3,7 +3,7 @@
 {% block title %} Pedidos {% endblock title %}
 
 {% load static %}
-{% block css %} 
+{% block css %}
 <link rel="stylesheet" type="text/css" href="{% static 'clientes/css/index.css' %}">
 {% endblock css %}
 
@@ -29,7 +29,7 @@
                 </div>
                 {% endif %}
                 {% if request.user.is_authenticated %}
-                    {% if request.user.is_staff %}
+                    {% if request.user.is_superuser %}
                         {% for o in object_list %}
                             <div class="card mb-2 ">
                                 <div class="card-header">
@@ -62,6 +62,15 @@
                                         <a href="{% url 'orderDetails' o.id %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
                                         <a href="{% url 'orderDelete' o.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
                                         <a href="{% url 'orderUpdate' o.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="card mb-2 ">
+                                    <div class="card-header">
+                                        <h5 class="mt-2">Pedido # {{ o.order_ref }}</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        Este pedido pertenece a otro usuario y sus detalles no son visibles para nadie que no sea el propio usuario o un adminstrador.
                                     </div>
                                 </div>
                             {% endif %}

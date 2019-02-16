@@ -156,23 +156,23 @@
 		</nav>
     {% endblock navbar %}
     {% block content %}
-    
+
     {% endblock content %}
 
     {% block footer %}
-    {% if request.user.is_authenticated %}
-        {% if not request.user.is_staff %}
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 offset-md-4">
-                        <div class="text-center">
-                            <button onclick="myFunction()">Más info</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-    {% endif %}
+    <!--{% if request.user.is_authenticated %}-->
+    <!--    {% if not request.user.is_staff %}-->
+    <!--        <div class="container">-->
+    <!--            <div class="row">-->
+    <!--                <div class="col-md-4 offset-md-4">-->
+    <!--                    <div class="text-center">-->
+    <!--                        <button id="hideBtn" onclick="myFunction()">Más info</button>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    {% endif %}-->
+    <!--{% endif %}-->
     <footer class="mt-4">
         <div class="container">
             <div class="row">
@@ -207,6 +207,8 @@ $(document).ready(function() {
 /*Scroll to top when arrow up clicked END*/
 </script>
 <script>
+function noop() {};
+
 function myFunction() {
   var mssg;
   if (confirm("¿Desea reclamar el premio?")) {
@@ -215,6 +217,13 @@ function myFunction() {
     mssg = "Vaya! Sentimos que no desee el premio. Aún así, esperamos volver a verle por aquí";
   }
   document.getElementById("prize").innerHTML = mssg;
+  myFunction = noop;
+  var x = document.getElementById("hideBtn");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
 }
 </script>
 <script>

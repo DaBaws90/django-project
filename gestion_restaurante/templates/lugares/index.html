@@ -3,7 +3,7 @@
 {% block title %} Direcciones/Lugares {% endblock title %}
 
 {% load static %}
-{% block css %} 
+{% block css %}
 <link rel="stylesheet" type="text/css" href="{% static 'clientes/css/index.css' %}">
 {% endblock css %}
 
@@ -33,17 +33,17 @@
                         <div class="card-header">
                             <h5 class="mt-2">Dirección {{ p.address }} ({{ p.city}})</h5>
                         </div>
-                        {% comment %} {% if request.is_Authenticated %} {% endcomment %}
-                            <div class="card-body">
-                                <a href="{% url 'placeDetails' p.id %}" class="btn btn-outline-success btn-sm ml-5"><i class="fas fa-search"></i> Ver detalles</a>
-                                {% comment %} {% if request.user.is_staff %} {% endcomment %}
+                        <div class="card-body">
+                            <a href="{% url 'placeDetails' p.id %}" class="btn btn-outline-success btn-sm"><i class="fas fa-search"></i> Ver detalles</a>
+                            {% if request.is_authenticated %}
+                                {% if request.user.is_superuser %}
                                     <a href="{% url 'placeDelete' p.id %}" class="float-right"><i class="fas fa-trash-alt"></i> </a>
                                     <a href="{% url 'placeUpdate' p.id %}" class="float-right mr-3"><i class="fas fa-edit "></i> </a>
-                                {% comment %} {% endif %} {% endcomment %}
-                            </div>
-                        {% comment %} {% endif %} {% endcomment %}
+                                {% endif %}
+                            {% endif %}
+                        </div>
                     </div>
-                    
+
                 {% empty %}
                     <div class="card">
                         <div class="card-header">
